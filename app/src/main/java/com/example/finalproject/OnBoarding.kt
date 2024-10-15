@@ -3,7 +3,6 @@ package com.example.finalproject
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,90 +31,92 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.finalproject.Model.Onboarding
+import com.example.finalproject.Model.onboardingPages
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
 class OnBoarding : ComponentActivity() {
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        val onboarding: List<@Composable ()-> Unit>  = listOf(
-            { OnboardingPage("Узнавай\nо премьерах", R.drawable.onboarding1) },
-            { OnboardingPage("Создавай\nколлекции ", R.drawable.onboarding2) },
-            { OnboardingPage("Делись\nс друзьями ", R.drawable.onboarding3) })
         setContent {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
+            HorizontalPager()
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HorizontalPager() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 26.dp, start = 26.dp, top = 40.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Image(
+                painter = painterResource(R.drawable.logo),
+                contentDescription = null
+            )
+            TextButton(onClick = {}) {
+                Text(
+                    text = "Пропустить",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(500),
+                    color = Color(0XFFB5B5C9)
+                )
+            }
+        }
+        val pagerState = rememberPagerState(pageCount = { onboardingPages.size })
+        HorizontalPager(
+            state = pagerState
+        ) { page ->
+            OnboardingPage(onboardingPages[page])
+        }
+        Row(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(26.dp, bottom = 60.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color =
+                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 26.dp, start = 26.dp, top = 80.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.logo),
-                        contentDescription = null
-                    )
-                    TextButton(onClick = {}) {
-                        Text(
-                            text = "Пропустить",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight(500),
-                            color = Color(0XFFB5B5C9)
-                        )
-                    }
-                }
-                val pagerState = rememberPagerState(pageCount = { onboarding.size })
-                HorizontalPager(
-                    state = pagerState
-                ) { page ->
-                    onboarding[page]()
-                }
-                Row(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth()
-                        .padding(26.dp, bottom = 60.dp),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    repeat(pagerState.pageCount) { iteration ->
-                        val color =
-                            if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                        Box(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                                .background(color)
-                                .size(10.dp)
-                        )
-                    }
-                }
+                        .padding(4.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(10.dp)
+                )
             }
         }
     }
 }
 
 @Composable
-fun OnboardingPage(title: String, poster: Int) {
+fun OnboardingPage(page: Onboarding) {
     Column(
         modifier = Modifier
-            .height(700.dp)
+            .height(630.dp)
             .padding(26.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(poster),
+            painter = painterResource(page.poster),
             contentDescription = null,
             modifier = Modifier
                 .padding(top = 150.dp)
         )
         Text(
-            text = title,
+            text = page.title,
             textAlign = TextAlign.Left,
             lineHeight = 42.sp,
             fontSize = 32.sp,
@@ -132,6 +133,6 @@ fun OnboardingPage(title: String, poster: Int) {
 @Composable
 fun OnBoardingPreviews() {
     FinalProjectTheme {
-        OnboardingPage("How are you", R.drawable.onboarding2)
+        HorizontalPager()
     }
 }
