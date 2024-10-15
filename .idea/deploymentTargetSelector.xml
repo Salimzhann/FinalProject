@@ -7,10 +7,7 @@
       </SelectionState>
       <SelectionState runConfigName="Navigation">
         <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="Navigation (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
+      </SelectionState
     </selectionStates>
   </component>
 </project>
