@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.Model.MainPageViewModel
 import com.example.finalproject.R
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 
 class Navigation : ComponentActivity() {
@@ -59,17 +61,30 @@ fun MyBottomNavigation(navController: NavController) {
         Screen.Search,
         Screen.Profile
     )
+
+    // Observe the current back stack entry
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     BottomNavigation(
         backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
     ) {
-
         items.forEach { screen ->
+            val isSelected = currentRoute == screen.route
+
             BottomNavigationItem(
-                icon = { Icon(painter = painterResource(id = screen.iconId), contentDescription = null, modifier = Modifier.size(18.dp)) },
-                selected = navController.currentDestination?.route == screen.route,
+                icon = {
+                    Icon(
+                        painter = painterResource(id = screen.iconId),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = if (isSelected) Color.Blue.copy(alpha = 0.8f) else Color.Gray.copy(alpha = 0.4f)
+                    )
+                },
+                selected = isSelected,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -79,9 +94,7 @@ fun MyBottomNavigation(navController: NavController) {
                         restoreState = true
                     }
                 },
-                alwaysShowLabel = false,
-                selectedContentColor = Color.Blue.copy(alpha = 0.8f),
-                unselectedContentColor = Color.Gray.copy(alpha = 0.4f)
+                alwaysShowLabel = false
             )
         }
     }
@@ -92,24 +105,6 @@ sealed class Screen(val route: String, val iconId: Int) {
     data object Search : Screen("search", R.drawable.searchicon)
     data object Profile : Screen("profile", R.drawable.profileicon)
 }
-
-
-@Composable
-fun HomeScreen() {
-    Text("Home com.example.finalproject.Screen")
-}
-
-@Composable
-fun SearchScreen() {
-    Text("Search com.example.finalproject.Screen")
-}
-
-@Composable
-fun ProfileScreen() {
-    Text("Profile com.example.finalproject.Screen")
-}
-
-
 
 @Preview(showBackground = true)
 @Composable
