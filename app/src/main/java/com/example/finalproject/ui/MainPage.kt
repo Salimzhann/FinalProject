@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,13 +33,13 @@ class MainPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SetupUI(viewModel)
+            setupUI(viewModel)
         }
     }
 }
 
 @Composable
-fun SetupUI(viewModel: MainPageViewModel) {
+fun setupUI(viewModel: MainPageViewModel) {
     Column(modifier = Modifier.padding(16.dp)) {
         MovieSection("Премьеры", viewModel.premieres)
         Spacer(modifier = Modifier.height(16.dp))
@@ -99,5 +100,5 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
 @Composable
 fun GreetingPreview() {
     val viewModel = MainPageViewModel()
-    SetupUI(viewModel)
+    setupUI(viewModel)
 }
