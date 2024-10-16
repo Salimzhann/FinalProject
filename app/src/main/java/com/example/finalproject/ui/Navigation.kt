@@ -45,7 +45,7 @@ fun MainScreen() {
         bottomBar = { MyBottomNavigation(navController) }
     ) { innerPadding ->
         NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Home.route) { setupUI(viewModel) }
+            composable(Screen.Home.route) { SetupUI(viewModel) }
             composable(Screen.Search.route) { SearchScreen() }
             composable(Screen.Profile.route) { ProfileScreen() }
         }
