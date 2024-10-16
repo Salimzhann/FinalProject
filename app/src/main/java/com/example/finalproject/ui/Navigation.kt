@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.Model.MainPageViewModel
 import com.example.finalproject.R
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 
 class Navigation : ComponentActivity() {
@@ -42,10 +44,10 @@ fun MainScreen() {
     Scaffold(
         bottomBar = { MyBottomNavigation(navController) }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Icons.Home.route, Modifier.padding(innerPadding)) {
-            composable(Icons.Home.route) { setupUI(viewModel) }
-            composable(Icons.Search.route) { SearchScreen() }
-            composable(Icons.Profile.route) { ProfileScreen() }
+        NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
+            composable(Screen.Home.route) { setupUI(viewModel) }
+            composable(Screen.Search.route) { SearchScreen() }
+            composable(Screen.Profile.route) { ProfileScreen() }
         }
     }
 }
@@ -53,23 +55,34 @@ fun MainScreen() {
 @Composable
 fun MyBottomNavigation(navController: NavController) {
     val items = listOf(
-        Icons.Home,
-        Icons.Search,
-        Icons.Profile
+        Screen.Home,
+        Screen.Search,
+        Screen.Profile
     )
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     BottomNavigation(
         backgroundColor = Color.White,
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
     ) {
-        items.forEach { icon ->
+        items.forEach { screen ->
+            val isSelected = currentRoute == screen.route
             BottomNavigationItem(
                 icon = {
-                    Icon(painter = painterResource(id = icon.iconId), contentDescription = null, modifier = Modifier.size(18.dp)) },
-                selected = navController.currentDestination?.route == icon.route,
+                    Icon(
+                        painter = painterResource(id = screen.iconId),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = if (isSelected) Color.Blue.copy(alpha = 0.8f) else Color.Gray.copy(alpha = 1f)
+                    )
+                },
+                selected = isSelected,
                 onClick = {
-                    navController.navigate(icon.route) {
+                    navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
@@ -77,18 +90,16 @@ fun MyBottomNavigation(navController: NavController) {
                         restoreState = true
                     }
                 },
-                alwaysShowLabel = false,
-                selectedContentColor = Color.Blue.copy(alpha = 0.8f),
-                unselectedContentColor = Color.Gray.copy(alpha = 0.4f)
+                alwaysShowLabel = false
             )
         }
     }
 }
 
-sealed class Icons(val route: String, val iconId: Int) {
-    data object Home : Icons("home", R.drawable.homeicon)
-    data object Search : Icons("search", R.drawable.searchicon)
-    data object Profile : Icons("profile", R.drawable.profileicon)
+sealed class Screen(val route: String, val iconId: Int) {
+    data object Home : Screen("home", R.drawable.homeicon)
+    data object Search : Screen("search", R.drawable.searchicon)
+    data object Profile : Screen("profile", R.drawable.profileicon)
 }
 
 @Preview(showBackground = true)
