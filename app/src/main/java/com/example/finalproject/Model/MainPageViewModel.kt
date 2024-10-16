@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.theme.MainPage
+package com.example.finalproject.Model
 
 import com.example.finalproject.R
 

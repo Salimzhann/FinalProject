@@ -1,4 +1,4 @@
-package com.example.finalproject
+package com.example.finalproject.ui
 
 
 import android.os.Bundle
@@ -24,8 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.example.finalproject.ui.theme.MainPage.MainPageViewModel
-import com.example.finalproject.ui.theme.MainPage.setupUI
+import com.example.finalproject.Model.MainPageViewModel
+import com.example.finalproject.R
 
 
 class Navigation : ComponentActivity() {

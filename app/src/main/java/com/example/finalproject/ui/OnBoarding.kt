@@ -1,4 +1,4 @@
-package com.example.finalproject
+package com.example.finalproject.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.finalproject.Model.Onboarding
 import com.example.finalproject.Model.onboardingPages
+import com.example.finalproject.R
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
 class OnBoarding : ComponentActivity() {
