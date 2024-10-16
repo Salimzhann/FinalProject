@@ -24,6 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.example.finalproject.ui.theme.MainPage.MainPageViewModel
+import com.example.finalproject.ui.theme.MainPage.setupUI
 
 
 class Navigation : ComponentActivity() {
@@ -38,11 +40,12 @@ class Navigation : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val viewModel = MainPageViewModel()
     Scaffold(
         bottomBar = { MyBottomNavigation(navController) }
     ) { innerPadding ->
         NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Home.route) { HomeScreen() }
+            composable(Screen.Home.route) { setupUI(viewModel) }
             composable(Screen.Search.route) { SearchScreen() }
             composable(Screen.Profile.route) { ProfileScreen() }
         }
