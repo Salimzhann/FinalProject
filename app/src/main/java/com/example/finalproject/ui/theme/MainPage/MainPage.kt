@@ -63,7 +63,7 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
             Text(
                 text = "Все",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.clickable { /* Navigate to a full list */ }
+                modifier = Modifier.clickable { /* Some action */ }
             )
         }
         LazyRow {
@@ -81,13 +81,12 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
             .padding(8.dp)
             .width(120.dp)
             .clickable {
-                // Handle click, e.g., log or navigate to details
+                // some action
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Change AsyncImage to Image with drawable resource
         Image(
-            painter = painterResource(id = R.drawable.onboarding2), // Replace with your drawable
+            painter = painterResource(id = R.drawable.onboarding2), 
             contentDescription = "Movie Poster",
             modifier = Modifier.size(120.dp, 180.dp)
         )
