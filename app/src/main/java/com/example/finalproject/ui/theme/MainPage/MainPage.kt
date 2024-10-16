@@ -83,12 +83,12 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
             .clickable {
                 // some action
             },
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
         Image(
-            painter = painterResource(movie.imagePath), 
+            painter = painterResource(movie.imagePath),
             contentDescription = "Movie Poster",
-            modifier = Modifier.size(120.dp, 180.dp)
+            modifier = Modifier.size(111.dp, 156.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = movie.title, style = MaterialTheme.typography.bodyLarge)
