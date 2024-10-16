@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.finalproject.Model.MainPageViewModel
+import com.example.finalproject.R
 
 class MainPage : ComponentActivity() {
 
@@ -48,7 +50,15 @@ class MainPage : ComponentActivity() {
 
 @Composable
 fun setupUI(viewModel: MainPageViewModel) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(top = 57.dp)) {
+
+        Image(
+            painter = painterResource(R.drawable.logo),
+            contentDescription = "Movie Poster",
+            modifier = Modifier.size(160.dp, 60.dp)
+                .padding(horizontal = 20.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         MovieSection("Премьеры", viewModel.premieres)
         Spacer(modifier = Modifier.height(16.dp))
         MovieSection("Популярное", viewModel.popularCinema)
@@ -61,7 +71,8 @@ fun setupUI(viewModel: MainPageViewModel) {
 fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -71,10 +82,13 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
             Text(
                 text = "Все",
                 style = MaterialTheme.typography.bodyMedium,
+                color = Color.Blue,
                 modifier = Modifier.clickable { /* Some action */ }
             )
         }
-        LazyRow {
+        LazyRow (
+            contentPadding = PaddingValues(start = 10.dp)
+        ){
             items(movies.size) { index ->
                 MovieItemView(movie = movies[index])
             }
@@ -100,24 +114,23 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
                 modifier = Modifier.size(111.dp, 156.dp)
             )
 
-            // Rating Badge with Perfect Centering
             Box(
                 modifier = Modifier
-                    .align(Alignment.TopEnd) // Positioning at the top-right corner
-                    .offset(x = (-8).dp, y = 8.dp) // Adjust position slightly
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-8).dp, y = 8.dp)
                     .background(
-                        color = Color(0xFF3D5AFE), // Blue background
-                        shape = RoundedCornerShape(50) // Fully rounded shape for a pill effect
+                        color = Color(0xFF3D3BFF),
+                        shape = RoundedCornerShape(50)
                     )
-                    .width(20.dp) // Increase width to fit the text
-                    .height(12.dp) // Adjust height for a better fit
+                    .width(20.dp)
+                    .height(12.dp)
             ) {
                 Text(
                     text = movie.rating.toString(),
                     color = Color.White,
-                    fontSize = 8.sp, // Adjusted font size to fit within small dimensions
+                    fontSize = 8.sp,
                     fontWeight = FontWeight(500),
-                    modifier = Modifier.align(Alignment.Center) // Center text within the box
+                    modifier = Modifier.align(Alignment.Center) 
                 )
             }
 
