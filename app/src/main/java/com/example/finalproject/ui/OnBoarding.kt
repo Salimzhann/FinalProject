@@ -30,6 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.Model.Onboarding
 import com.example.finalproject.Model.onboardingPages
 import com.example.finalproject.R
@@ -39,13 +43,26 @@ class OnBoarding : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HorizontalPager()
+            OnboardingScreen()
         }
     }
 }
 
 @Composable
-fun HorizontalPager() {
+fun OnboardingScreen()  {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = "onboarding") {
+        composable("onboarding") {
+            HorizontalPager(navController)
+        }
+        composable("mainPage") {
+            MainScreen()
+        }
+    }
+}
+
+@Composable
+fun HorizontalPager(navController: NavController) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -61,7 +78,9 @@ fun HorizontalPager() {
                 painter = painterResource(R.drawable.logo),
                 contentDescription = null
             )
-            TextButton(onClick = {}) {
+            TextButton(onClick = {
+                navController.navigate("mainPage")
+            } ) {
                 Text(
                     text = "Пропустить",
                     fontSize = 14.sp,
@@ -132,6 +151,5 @@ fun OnboardingPage(page: Onboarding) {
 @Composable
 fun OnBoardingPreviews() {
     FinalProjectTheme {
-        HorizontalPager()
     }
 }
