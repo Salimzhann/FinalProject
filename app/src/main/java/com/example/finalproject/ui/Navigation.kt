@@ -61,7 +61,6 @@ fun MyBottomNavigation(navController: NavController) {
         Screen.Profile
     )
 
-    // Observe the current back stack entry
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
