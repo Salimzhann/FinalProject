@@ -86,7 +86,7 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.onboarding2), 
+            painter = painterResource(movie.imagePath), 
             contentDescription = "Movie Poster",
             modifier = Modifier.size(120.dp, 180.dp)
         )
