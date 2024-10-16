@@ -130,7 +130,7 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
                     color = Color.White,
                     fontSize = 8.sp,
                     fontWeight = FontWeight(500),
-                    modifier = Modifier.align(Alignment.Center) 
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
 
