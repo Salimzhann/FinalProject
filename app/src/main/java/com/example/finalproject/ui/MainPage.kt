@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,13 +41,13 @@ class MainPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            setupUI(viewModel)
+            SetupUI(viewModel)
         }
     }
 }
 
 @Composable
-fun setupUI(viewModel: MainPageViewModel) {
+fun SetupUI(viewModel: MainPageViewModel) {
     Column(modifier = Modifier.padding(top = 57.dp)) {
 
         Image(
@@ -149,5 +147,5 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
 @Composable
 fun GreetingPreview() {
     val viewModel = MainPageViewModel()
-    setupUI(viewModel)
+    SetupUI(viewModel)
 }
