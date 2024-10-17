@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -93,12 +94,19 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
                 text = title,
                 style = MaterialTheme.typography.titleLarge
             )
-            Text(
-                text = "Все",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Blue,
-                modifier = Modifier.clickable { /* Some action */ }
-            )
+            TextButton(onClick = {}) {
+                Text(
+                    text = "Все",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Blue,
+                )
+            }
+//            (
+//                text = "Все",
+//                style = MaterialTheme.typography.bodyMedium,
+//                color = Color.Blue,
+//                modifier = Modifier.clickable { /* Some action */ }
+//            )
         }
         LazyRow (
             contentPadding = PaddingValues(start = 10.dp)
