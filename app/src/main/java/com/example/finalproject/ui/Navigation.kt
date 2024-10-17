@@ -24,9 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.Model.MainPageViewModel
-import com.example.finalproject.R
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.finalproject.Model.Icons
 
 
 class Navigation : ComponentActivity() {
@@ -45,10 +45,10 @@ fun MainScreen() {
     Scaffold(
         bottomBar = { MyBottomNavigation(navController) }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Home.route) { SetupUI(viewModel) }
-            composable(Screen.Search.route) { SearchScreen() }
-            composable(Screen.Profile.route) { ProfileScreen() }
+        NavHost(navController, startDestination = Icons.Home.route, Modifier.padding(innerPadding)) {
+            composable(Icons.Home.route) { SetupUI(viewModel) }
+            composable(Icons.Search.route) { SearchScreen() }
+            composable(Icons.Profile.route) { ProfileScreen() }
         }
     }
 }
@@ -56,9 +56,9 @@ fun MainScreen() {
 @Composable
 fun MyBottomNavigation(navController: NavController) {
     val items = listOf(
-        Screen.Home,
-        Screen.Search,
-        Screen.Profile
+        Icons.Home,
+        Icons.Search,
+        Icons.Profile
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -96,12 +96,6 @@ fun MyBottomNavigation(navController: NavController) {
             )
         }
     }
-}
-
-sealed class Screen(val route: String, val iconId: Int) {
-    data object Home : Screen("home", R.drawable.homeicon)
-    data object Search : Screen("search", R.drawable.searchicon)
-    data object Profile : Screen("profile", R.drawable.profileicon)
 }
 
 @Preview(showBackground = true)
