@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,29 +44,42 @@ class MainPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            setupUI(viewModel)
+            SetupUI(viewModel)
         }
     }
 }
 
-@Composable
-fun setupUI(viewModel: MainPageViewModel) {
-    Column(modifier = Modifier.padding(top = 57.dp)) {
 
-        Image(
-            painter = painterResource(R.drawable.logo),
-            contentDescription = "Movie Poster",
-            modifier = Modifier.size(160.dp, 60.dp)
-                .padding(horizontal = 20.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MovieSection("Премьеры", viewModel.premieres)
-        Spacer(modifier = Modifier.height(16.dp))
-        MovieSection("Популярное", viewModel.popularCinema)
-        Spacer(modifier = Modifier.height(16.dp))
-        MovieSection("Боевики США", viewModel.usaActionMovies)
+@Composable
+fun SetupUI(viewModel: MainPageViewModel) {
+    LazyColumn(modifier = Modifier.padding(top = 57.dp)) {
+        item {
+            Image(
+                painter = painterResource(R.drawable.logo),
+                contentDescription = "Movie Poster",
+                modifier = Modifier.size(160.dp, 60.dp)
+                    .padding(horizontal = 20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            MovieSection("Премьеры", viewModel.premieres)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            MovieSection("Популярное", viewModel.popularCinema)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            MovieSection("Боевики США", viewModel.usaActionMovies)
+        }
     }
 }
+
 
 @Composable
 fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
@@ -149,5 +163,5 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
 @Composable
 fun GreetingPreview() {
     val viewModel = MainPageViewModel()
-    setupUI(viewModel)
+    SetupUI(viewModel)
 }
