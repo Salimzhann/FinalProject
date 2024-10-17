@@ -115,7 +115,7 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .width(120.dp)
+            .width(111.dp)
             .clickable {
                 // some action
             },
