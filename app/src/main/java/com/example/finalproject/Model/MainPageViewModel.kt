@@ -1,4 +1,4 @@
-package com.example.finalproject.Model
+package com.example.finalproject.model
 
 import com.example.finalproject.R
 

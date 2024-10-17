@@ -34,8 +34,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.finalproject.Model.Onboarding
-import com.example.finalproject.Model.onboardingPages
+import com.example.finalproject.model.Onboarding
+import com.example.finalproject.model.onboardingPages
 import com.example.finalproject.R
 import com.example.finalproject.ui.theme.FinalProjectTheme
 

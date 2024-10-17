@@ -23,10 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.example.finalproject.Model.MainPageViewModel
+import com.example.finalproject.model.MainPageViewModel
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.finalproject.Model.Icons
+import com.example.finalproject.model.Icons
 
 
 class Navigation : ComponentActivity() {
