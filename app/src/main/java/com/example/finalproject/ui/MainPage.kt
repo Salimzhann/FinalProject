@@ -99,12 +99,6 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
                     color = Color.Blue,
                 )
             }
-//            (
-//                text = "Все",
-//                style = MaterialTheme.typography.bodyMedium,
-//                color = Color.Blue,
-//                modifier = Modifier.clickable { /* Some action */ }
-//            )
         }
         LazyRow (
             contentPadding = PaddingValues(start = 10.dp)
