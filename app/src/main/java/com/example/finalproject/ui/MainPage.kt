@@ -152,8 +152,16 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
         }
 
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = movie.title, style = MaterialTheme.typography.bodyLarge)
-        Text(text = movie.genre, style = MaterialTheme.typography.bodySmall)
+
+        Text(
+            text = movie.title,
+            fontSize = 14.sp,
+            fontWeight = FontWeight(400))
+        Text(
+            color = Color.Gray,
+            text = movie.genre,
+            fontSize = 12.sp,
+            fontWeight = FontWeight(400))
     }
 }
 
