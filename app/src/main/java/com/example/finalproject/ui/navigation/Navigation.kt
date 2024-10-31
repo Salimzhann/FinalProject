@@ -23,25 +23,44 @@ import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
+import com.example.finalproject.ui.screens.AllMoviesView
 import com.example.finalproject.ui.screens.ProfileScreen
 import com.example.finalproject.ui.screens.SearchScreen
 import com.example.finalproject.ui.screens.SetupUI
-
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     val viewModel = MainPageViewModel()
+
+    // Определение, когда показывать BottomNavigation
+    val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
+        Icons.Home.route,
+        Icons.Search.route,
+        Icons.Profile.route
+    )
+
     Scaffold(
-        bottomBar = { MyBottomNavigation(navController) }
+        bottomBar = { if (showBottomBar) MyBottomNavigation(navController) }
     ) { innerPadding ->
         NavHost(navController, startDestination = Icons.Home.route, Modifier.padding(innerPadding)) {
-            composable(Icons.Home.route) { SetupUI(viewModel) }
+            composable(Icons.Home.route) { SetupUI(viewModel, navController) }
             composable(Icons.Search.route) { SearchScreen() }
             composable(Icons.Profile.route) { ProfileScreen() }
+            composable("allMovies/{category}") { backStackEntry ->
+                val category = backStackEntry.arguments?.getString("category")
+                val movies = when (category) {
+                    "Премьеры" -> viewModel.premieres
+                    "Популярное" -> viewModel.popularCinema
+                    "Боевики США" -> viewModel.usaActionMovies
+                    else -> emptyList()
+                }
+                AllMoviesView(movies) { navController.popBackStack() }
+            }
         }
     }
 }
+
 
 @Composable
 fun MyBottomNavigation(navController: NavController) {

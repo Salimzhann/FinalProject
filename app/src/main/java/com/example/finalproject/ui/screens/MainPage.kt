@@ -33,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import com.example.finalproject.R
 
@@ -45,43 +47,36 @@ class MainPage : ComponentActivity() {
     }
 }
 
-
 @Composable
-fun SetupUI(viewModel: MainPageViewModel) {
+fun SetupUI(viewModel: MainPageViewModel, navController: NavController) { // Передача NavController
     LazyColumn(modifier = Modifier.padding(top = 57.dp)) {
         item {
             Image(
                 painter = painterResource(R.drawable.logo),
-                contentDescription = "Movie Poster",
+                contentDescription = "Постер фильма",
                 modifier = Modifier.size(160.dp, 60.dp)
                     .padding(horizontal = 20.dp)
             )
-
             Spacer(modifier = Modifier.height(16.dp))
         }
-
         item {
-            MovieSection("Премьеры", viewModel.premieres)
+            MovieSection("Премьеры", viewModel.premieres, navController)
             Spacer(modifier = Modifier.height(16.dp))
         }
-
         item {
-            MovieSection("Популярное", viewModel.popularCinema)
+            MovieSection("Популярное", viewModel.popularCinema, navController)
             Spacer(modifier = Modifier.height(16.dp))
         }
-
         item {
-            MovieSection("Боевики США", viewModel.usaActionMovies)
+            MovieSection("Боевики США", viewModel.usaActionMovies, navController)
         }
     }
 }
-
 @Composable
-fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
+fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>, navController: NavController) {
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 20.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -89,7 +84,7 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
                 style = MaterialTheme.typography.titleLarge
             )
             TextButton(onClick = {
-
+                navController.navigate("allMovies/${title}") // Используйте заголовок для определения маршрута
             }) {
                 Text(
                     text = "Все",
@@ -98,9 +93,7 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
                 )
             }
         }
-        LazyRow (
-            contentPadding = PaddingValues(start = 10.dp)
-        ){
+        LazyRow(contentPadding = PaddingValues(start = 10.dp)) {
             items(movies.size) { index ->
                 MovieItemView(movie = movies[index])
             }
@@ -108,9 +101,11 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    val viewModel = MainPageViewModel()
-    SetupUI(viewModel)
-}
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    val viewModel = MainPageViewModel()
+//    SetupUI(viewModel)
+//}
