@@ -1,9 +1,10 @@
 package com.example.finalproject.model
+import androidx.annotation.DrawableRes
 import com.example.finalproject.R
 
 data class Onboarding(
     val title: String,
-    val poster: Int
+    @DrawableRes val poster: Int
 )
 
 val onboardingPages = listOf(

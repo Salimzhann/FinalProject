@@ -39,14 +39,6 @@ import com.example.finalproject.model.onboardingPages
 import com.example.finalproject.R
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
-class OnBoarding : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            OnboardingScreen()
-        }
-    }
-}
 
 @Composable
 fun OnboardingScreen()  {
@@ -61,8 +53,10 @@ fun OnboardingScreen()  {
     }
 }
 
+
 @Composable
 fun HorizontalPager(navController: NavController) {
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

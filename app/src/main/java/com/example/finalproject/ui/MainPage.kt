@@ -43,7 +43,7 @@ class MainPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SetupUI(viewModel)
+            OnboardingScreen()
         }
     }
 }
