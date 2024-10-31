@@ -76,7 +76,6 @@ fun SetupUI(viewModel: MainPageViewModel) {
     }
 }
 
-
 @Composable
 fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
     Column {
@@ -89,7 +88,9 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
                 text = title,
                 style = MaterialTheme.typography.titleLarge
             )
-            TextButton(onClick = {}) {
+            TextButton(onClick = {
+
+            }) {
                 Text(
                     text = "Все",
                     style = MaterialTheme.typography.bodyMedium,
