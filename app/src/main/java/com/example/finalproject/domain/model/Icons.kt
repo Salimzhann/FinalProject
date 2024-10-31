@@ -1,4 +1,4 @@
-package com.example.finalproject.model
+package com.example.finalproject.domain.model
 
 import com.example.finalproject.R
 

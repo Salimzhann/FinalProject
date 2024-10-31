@@ -1,4 +1,4 @@
-package com.example.finalproject.model
+package com.example.finalproject.data.local
 import androidx.annotation.DrawableRes
 import com.example.finalproject.R
 

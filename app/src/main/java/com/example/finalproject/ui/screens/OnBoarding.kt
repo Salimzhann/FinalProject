@@ -1,8 +1,5 @@
-package com.example.finalproject.ui
+package com.example.finalproject.ui.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +31,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.finalproject.model.Onboarding
-import com.example.finalproject.model.onboardingPages
+import com.example.finalproject.data.local.Onboarding
+import com.example.finalproject.data.local.onboardingPages
 import com.example.finalproject.R
+import com.example.finalproject.ui.navigation.MainScreen
 import com.example.finalproject.ui.theme.FinalProjectTheme
 
 

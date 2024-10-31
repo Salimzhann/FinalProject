@@ -1,4 +1,4 @@
-package com.example.finalproject.ui
+package com.example.finalproject.ui.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -33,13 +33,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.finalproject.model.MainPageViewModel
+import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import com.example.finalproject.R
 
 class MainPage : ComponentActivity() {
-
-    private val viewModel = MainPageViewModel()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

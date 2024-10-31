@@ -13,7 +13,7 @@
         android:theme="@style/Theme.FinalProject"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainPage"
+            android:name=".ui.screens.MainPage"
             android:exported="true"
             android:theme="@style/Theme.FinalProject">
             <intent-filter>
