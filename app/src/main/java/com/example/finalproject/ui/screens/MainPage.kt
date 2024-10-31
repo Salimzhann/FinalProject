@@ -107,63 +107,6 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>) {
     }
 }
 
-@Composable
-fun MovieItemView(movie: MainPageViewModel.MovieItem) {
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .width(111.dp)
-            .clickable {
-                // some action
-            },
-        horizontalAlignment = Alignment.Start
-    ) {
-        Box {
-            Image(
-                painter = painterResource(movie.imagePath),
-                contentDescription = "Movie Poster",
-                modifier = Modifier.size(111.dp, 156.dp)
-            )
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .offset(x = (-8).dp, y = 8.dp)
-                    .background(
-                        color = Color(0xFF3D3BFF),
-                        shape = RoundedCornerShape(50)
-                    )
-                    .width(20.dp)
-                    .height(12.dp)
-            ) {
-                Text(
-                    text = movie.rating.toString(),
-                    color = Color.White,
-                    fontSize = 8.sp,
-                    fontWeight = FontWeight(500),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-
-
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = movie.title,
-            fontSize = 14.sp,
-            fontWeight = FontWeight(400))
-        Text(
-            color = Color.Gray,
-            text = movie.genre,
-            fontSize = 12.sp,
-            fontWeight = FontWeight(400))
-    }
-}
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
