@@ -33,7 +33,6 @@ fun MainScreen() {
     val navController = rememberNavController()
     val viewModel = MainPageViewModel()
 
-    // Определение, когда показывать BottomNavigation
     val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
         Icons.Home.route,
         Icons.Search.route,
@@ -55,7 +54,9 @@ fun MainScreen() {
                     "Боевики США" -> viewModel.usaActionMovies
                     else -> emptyList()
                 }
-                AllMoviesView(movies) { navController.popBackStack() }
+                if (category != null) {
+                    AllMoviesView(movies, category) { navController.popBackStack() }
+                }
             }
         }
     }
