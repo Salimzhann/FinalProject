@@ -73,7 +73,7 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>, navCo
                 style = MaterialTheme.typography.titleLarge
             )
             TextButton(onClick = {
-                navController.navigate("allMovies/${title}") // Используйте заголовок для определения маршрута
+                navController.navigate("allMovies/${title}")
             }) {
                 Text(
                     text = "Все",
