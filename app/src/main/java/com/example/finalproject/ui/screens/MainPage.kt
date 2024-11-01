@@ -19,6 +19,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import com.example.finalproject.R
+import com.example.finalproject.domain.model.MovieItem
 
 class MainPage : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +42,10 @@ class MainPage : ComponentActivity() {
 
 @Composable
 fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
+    val premieres by viewModel.premieres.observeAsState(emptyList())
+    val popularCinema by viewModel.popularCinema.observeAsState(emptyList())
+    val usaActionMovies by viewModel.usaActionMovies.observeAsState(emptyList())
+
     LazyColumn(modifier = Modifier.padding(top = 57.dp)) {
         item {
             Image(
@@ -49,23 +57,26 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
         }
         item {
-            MovieSection("Премьеры", viewModel.premieres, navController)
+            MovieSection("ТОП 250 ФИЛЬМОВ", viewModel.getLimitedMovies(premieres), navController, "ТОП 250 ФИЛЬМОВ")
             Spacer(modifier = Modifier.height(16.dp))
         }
         item {
-            MovieSection("Популярное", viewModel.popularCinema, navController)
+            MovieSection("Популярное", viewModel.getLimitedMovies(popularCinema), navController, "Популярное")
             Spacer(modifier = Modifier.height(16.dp))
         }
         item {
-            MovieSection("Боевики США", viewModel.usaActionMovies, navController)
+            MovieSection("ТОП 250 СЕРИАЛОВ", viewModel.getLimitedMovies(usaActionMovies), navController, "ТОП 250 СЕРИАЛОВ")
         }
     }
 }
+
+
 @Composable
-fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>, navController: NavController) {
-    Column {
+fun MovieSection(title: String, movies: List<MovieItem>, navController: NavController, category: String) {
+    Column(modifier = Modifier.height(330.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -73,7 +84,7 @@ fun MovieSection(title: String, movies: List<MainPageViewModel.MovieItem>, navCo
                 style = MaterialTheme.typography.titleLarge
             )
             TextButton(onClick = {
-                navController.navigate("allMovies/${title}")
+                navController.navigate("allMovies/$category")  // Навигация на экран с полным списком фильмов
             }) {
                 Text(
                     text = "Все",

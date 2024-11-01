@@ -70,4 +70,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation("androidx.compose.runtime:runtime-livedata:1.0.0")
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }

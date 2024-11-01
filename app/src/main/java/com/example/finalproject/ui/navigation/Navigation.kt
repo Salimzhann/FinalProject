@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
 import com.example.finalproject.ui.screens.AllMoviesView
@@ -31,37 +33,36 @@ import com.example.finalproject.ui.screens.SetupUI
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val viewModel = MainPageViewModel()
-
-    val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
-        Icons.Home.route,
-        Icons.Search.route,
-        Icons.Profile.route
-    )
+    val viewModel: MainPageViewModel = viewModel()
 
     Scaffold(
-        bottomBar = { if (showBottomBar) MyBottomNavigation(navController) }
+        bottomBar = {
+            val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
+                "home", "search", "profile"
+            )
+            if (showBottomBar) MyBottomNavigation(navController)
+        }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Icons.Home.route, Modifier.padding(innerPadding)) {
-            composable(Icons.Home.route) { SetupUI(viewModel, navController) }
-            composable(Icons.Search.route) { SearchScreen() }
-            composable(Icons.Profile.route) { ProfileScreen() }
+        NavHost(navController, startDestination = "home", Modifier.padding(innerPadding)) {
+            composable("home") { SetupUI(viewModel, navController) }
+            composable("search") { SearchScreen() }
+            composable("profile") { ProfileScreen() }
             composable("allMovies/{category}") { backStackEntry ->
                 val category = backStackEntry.arguments?.getString("category")
                 val movies = when (category) {
-                    "Премьеры" -> viewModel.premieres
-                    "Популярное" -> viewModel.popularCinema
-                    "Боевики США" -> viewModel.usaActionMovies
+                    "ТОП 250 ФИЛЬМОВ" -> viewModel.premieres.value ?: emptyList()
+                    "Популярное" -> viewModel.popularCinema.value ?: emptyList()
+                    "ТОП 250 СЕРИАЛОВ" -> viewModel.usaActionMovies.value ?: emptyList()
                     else -> emptyList()
                 }
                 if (category != null) {
                     AllMoviesView(movies, category) { navController.popBackStack() }
                 }
             }
+
         }
     }
 }
-
 
 @Composable
 fun MyBottomNavigation(navController: NavController) {
@@ -82,7 +83,6 @@ fun MyBottomNavigation(navController: NavController) {
     ) {
         items.forEach { screen ->
             val isSelected = currentRoute == screen.route
-
             BottomNavigationItem(
                 icon = {
                     Icon(

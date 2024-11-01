@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,22 +22,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.finalproject.domain.viewmodel.MainPageViewModel
+import coil.compose.rememberAsyncImagePainter
+import com.example.finalproject.domain.model.MovieItem
 
 @Composable
-fun MovieItemView(movie: MainPageViewModel.MovieItem) {
+fun MovieItemView(movie: MovieItem) {
+    Log.d("MOVIE_ITEM_VIEW", "Rendering movie: ${movie.nameOriginal}")
     Column(
         modifier = Modifier
             .padding(8.dp)
             .width(111.dp)
             .clickable {
-                // some action
+                // действие при нажатии
             },
         horizontalAlignment = Alignment.Start
     ) {
         Box {
             Image(
-                painter = painterResource(movie.imagePath),
+                painter = rememberAsyncImagePainter(model = movie.posterUrl),  // Используем Coil для загрузки изображения по URL
                 contentDescription = "Movie Poster",
                 modifier = Modifier.size(111.dp, 156.dp)
             )
@@ -53,29 +56,27 @@ fun MovieItemView(movie: MainPageViewModel.MovieItem) {
                     .height(12.dp)
             ) {
                 Text(
-                    text = movie.rating.toString(),
+                    text = movie.ratingKinopoisk.toString(),
                     color = Color.White,
                     fontSize = 8.sp,
-                    fontWeight = FontWeight(500),
+                    fontWeight = FontWeight.W500,
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-
-
         }
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = movie.title,
+            text = movie.nameRu ?: movie.nameOriginal,
             fontSize = 14.sp,
-            fontWeight = FontWeight(400)
+            fontWeight = FontWeight.W400
         )
         Text(
             color = Color.Gray,
-            text = movie.genre,
+            text = movie.genres.joinToString { it.genre },
             fontSize = 12.sp,
-            fontWeight = FontWeight(400)
+            fontWeight = FontWeight.W400
         )
     }
 }

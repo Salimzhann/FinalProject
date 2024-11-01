@@ -15,12 +15,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import com.example.finalproject.domain.viewmodel.MainPageViewModel
+import com.example.finalproject.domain.model.MovieItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllMoviesView(
-    movies: List<MainPageViewModel.MovieItem>,
+    movies: List<MovieItem>,
     categoryName: String,
     onNavigateBack: () -> Unit
 ) {
@@ -38,9 +38,8 @@ fun AllMoviesView(
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(65.dp),
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding)
+            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
             items(movies) { movie ->
                 MovieItemView(movie = movie)
