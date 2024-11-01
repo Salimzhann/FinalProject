@@ -14,7 +14,7 @@
         android:theme="@style/Theme.FinalProject"
         tools:targetApi="31">
         <activity
-            android:name=".ui.screens.MainPage"
+            android:name=".App"
             android:exported="true"
             android:theme="@style/Theme.FinalProject">
             <intent-filter>
@@ -23,28 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.OnBoarding"
-            android:exported="true"
-            android:label="FinalProject"
-            android:theme="@style/Theme.FinalProject">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.Navigation"
-            android:exported="true"
-            android:label="FinalProject"
-            android:theme="@style/Theme.FinalProject">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

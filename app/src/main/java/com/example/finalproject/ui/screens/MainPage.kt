@@ -1,8 +1,5 @@
 package com.example.finalproject.ui.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,15 +27,6 @@ import androidx.navigation.NavController
 import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import com.example.finalproject.R
 import com.example.finalproject.domain.model.MovieItem
-
-class MainPage : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            OnboardingScreen()
-        }
-    }
-}
 
 @Composable
 fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {

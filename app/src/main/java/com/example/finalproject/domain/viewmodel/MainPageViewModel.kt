@@ -3,7 +3,7 @@ package com.example.finalproject.domain.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.finalproject.data.repository.KinopoiskApiService
+import com.example.finalproject.data.repository.FilmApiService
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.MovieResponse
 import okhttp3.OkHttpClient
@@ -29,7 +29,7 @@ class MainPageViewModel : ViewModel() {
         .build()
 
 
-    private val api = retrofit.create(KinopoiskApiService::class.java)
+    private val api = retrofit.create(FilmApiService::class.java)
 
     val premieres: MutableLiveData<List<MovieItem>> = MutableLiveData()
     val popularCinema: MutableLiveData<List<MovieItem>> = MutableLiveData()
