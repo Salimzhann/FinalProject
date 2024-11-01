@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,37 +28,87 @@ import androidx.navigation.NavController
 import com.example.finalproject.domain.viewmodel.MainPageViewModel
 import com.example.finalproject.R
 import com.example.finalproject.domain.model.MovieItem
+import com.example.finalproject.domain.model.ScreenState
 
 @Composable
 fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
-    val premieres by viewModel.premieres.observeAsState(emptyList())
-    val popularCinema by viewModel.popularCinema.observeAsState(emptyList())
-    val usaActionMovies by viewModel.usaActionMovies.observeAsState(emptyList())
+    val screenStatePremieres by viewModel.screenStatePremieres.observeAsState(ScreenState.Initial)
+    val screenStatePopular by viewModel.screenStatePopular.observeAsState(ScreenState.Initial)
+    val screenStateSeries by viewModel.screenStateSeries.observeAsState(ScreenState.Initial)
 
     LazyColumn(modifier = Modifier.padding(top = 57.dp)) {
         item {
             Image(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "Постер фильма",
-                modifier = Modifier.size(160.dp, 60.dp)
-                    .padding(horizontal = 20.dp)
+                modifier = Modifier.size(160.dp, 60.dp).padding(horizontal = 20.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
+
         item {
-            MovieSection("ТОП 250 ФИЛЬМОВ", viewModel.getLimitedMovies(premieres), navController, "ТОП 250 ФИЛЬМОВ")
+            when (screenStatePremieres) {
+                is ScreenState.Success -> {
+                    MovieSection(
+                        "ТОП 250 ФИЛЬМОВ",
+                        viewModel.getLimitedMovies((screenStatePremieres as ScreenState.Success).data),
+                        navController,
+                        "ТОП 250 ФИЛЬМОВ"
+                    )
+                }
+                is ScreenState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is ScreenState.Error -> {
+                    Text("Error loading ТОП 250 ФИЛЬМОВ")
+                }
+                else -> {}
+            }
             Spacer(modifier = Modifier.height(16.dp))
         }
+
         item {
-            MovieSection("Популярное", viewModel.getLimitedMovies(popularCinema), navController, "Популярное")
+            when (screenStatePopular) {
+                is ScreenState.Success -> {
+                    MovieSection(
+                        "Популярное",
+                        viewModel.getLimitedMovies((screenStatePopular as ScreenState.Success).data),
+                        navController,
+                        "Популярное"
+                    )
+                }
+                is ScreenState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is ScreenState.Error -> {
+                    Text("Error loading Популярное")
+                }
+                else -> {}
+            }
             Spacer(modifier = Modifier.height(16.dp))
         }
+
         item {
-            MovieSection("ТОП 250 СЕРИАЛОВ", viewModel.getLimitedMovies(usaActionMovies), navController, "ТОП 250 СЕРИАЛОВ")
+            when (screenStateSeries) {
+                is ScreenState.Success -> {
+                    MovieSection(
+                        "ТОП 250 СЕРИАЛОВ",
+                        viewModel.getLimitedMovies((screenStateSeries as ScreenState.Success).data),
+                        navController,
+                        "ТОП 250 СЕРИАЛОВ"
+                    )
+                }
+                is ScreenState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is ScreenState.Error -> {
+                    Text("Error loading ТОП 250 СЕРИАЛОВ")
+                }
+                else -> {}
+            }
         }
     }
 }
-
 
 @Composable
 fun MovieSection(title: String, movies: List<MovieItem>, navController: NavController, category: String) {
@@ -72,7 +123,7 @@ fun MovieSection(title: String, movies: List<MovieItem>, navController: NavContr
                 style = MaterialTheme.typography.titleLarge
             )
             TextButton(onClick = {
-                navController.navigate("allMovies/$category")  // Навигация на экран с полным списком фильмов
+                navController.navigate("allMovies/$category")
             }) {
                 Text(
                     text = "Все",

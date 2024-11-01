@@ -32,13 +32,13 @@ fun MovieItemView(movie: MovieItem) {
             .padding(8.dp)
             .width(111.dp)
             .clickable {
-                // действие при нажатии
+                //
             },
         horizontalAlignment = Alignment.Start
     ) {
         Box {
             Image(
-                painter = rememberAsyncImagePainter(model = movie.posterUrl),  // Используем Coil для загрузки изображения по URL
+                painter = rememberAsyncImagePainter(model = movie.posterUrl),
                 contentDescription = "Movie Poster",
                 modifier = Modifier.size(111.dp, 156.dp)
             )

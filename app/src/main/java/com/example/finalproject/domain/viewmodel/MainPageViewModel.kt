@@ -1,18 +1,17 @@
 package com.example.finalproject.domain.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.finalproject.data.repository.FilmApiService
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.MovieResponse
+import com.example.finalproject.domain.model.ScreenState
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 class MainPageViewModel : ViewModel() {
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://kinopoiskapiunofficial.tech/")
@@ -28,42 +27,38 @@ class MainPageViewModel : ViewModel() {
         )
         .build()
 
-
     private val api = retrofit.create(FilmApiService::class.java)
 
-    val premieres: MutableLiveData<List<MovieItem>> = MutableLiveData()
-    val popularCinema: MutableLiveData<List<MovieItem>> = MutableLiveData()
-    val usaActionMovies: MutableLiveData<List<MovieItem>> = MutableLiveData()
+    val screenStatePremieres = MutableLiveData<ScreenState>(ScreenState.Initial)
+    val screenStatePopular = MutableLiveData<ScreenState>(ScreenState.Initial)
+    val screenStateSeries = MutableLiveData<ScreenState>(ScreenState.Initial)
 
     init {
         loadMovies()
     }
 
-    fun getLimitedMovies(movies: List<MovieItem>): List<MovieItem> {
-        return movies.take(8)
-    }
+    fun getLimitedMovies(movies: List<MovieItem>): List<MovieItem> = movies.take(8)
 
     private fun loadMovies() {
-        loadMovieData("TOP_250_MOVIES", premieres)
-        loadMovieData("TOP_POPULAR_ALL", popularCinema)
-        loadMovieData("TOP_250_TV_SHOWS", usaActionMovies)
+        loadMovieData("TOP_250_MOVIES", screenStatePremieres)
+        loadMovieData("TOP_POPULAR_ALL", screenStatePopular)
+        loadMovieData("TOP_250_TV_SHOWS", screenStateSeries)
     }
 
-    private fun loadMovieData(type: String, liveData: MutableLiveData<List<MovieItem>>) {
+    private fun loadMovieData(type: String, stateLiveData: MutableLiveData<ScreenState>) {
+        stateLiveData.value = ScreenState.Loading
         api.getCollections(type, 1).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
-                    response.body()?.items?.let {
-                        liveData.value = it
-                        Log.d("API_RESPONSE", "Loaded ${it.size} items for type $type")
-                    }
+                    val movies = response.body()?.items ?: emptyList()
+                    stateLiveData.value = ScreenState.Success(movies)
                 } else {
-                    Log.e("API_ERROR", "Failed to load data: ${response.errorBody()?.string()}")
+                    stateLiveData.value = ScreenState.Error("Failed to load data: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                Log.e("API_ERROR", "Request failed", t)
+                stateLiveData.value = ScreenState.Error("Request failed: ${t.message}")
             }
         })
     }

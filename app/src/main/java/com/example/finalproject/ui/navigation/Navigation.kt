@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
+import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.screens.AllMoviesView
 import com.example.finalproject.ui.screens.ProfileScreen
 import com.example.finalproject.ui.screens.SearchScreen
@@ -43,22 +44,29 @@ fun MainScreen() {
         }
     ) { innerPadding ->
         NavHost(navController, startDestination = "home", Modifier.padding(innerPadding)) {
-            composable("home") { SetupUI(viewModel, navController) }
-            composable("search") { SearchScreen() }
-            composable("profile") { ProfileScreen() }
+            composable("home") {
+                SetupUI(viewModel = viewModel, navController = navController)
+            }
+            composable("search") {
+                SearchScreen()
+            }
+            composable("profile") {
+                ProfileScreen()
+            }
             composable("allMovies/{category}") { backStackEntry ->
                 val category = backStackEntry.arguments?.getString("category")
+
                 val movies = when (category) {
-                    "ТОП 250 ФИЛЬМОВ" -> viewModel.premieres.value ?: emptyList()
-                    "Популярное" -> viewModel.popularCinema.value ?: emptyList()
-                    "ТОП 250 СЕРИАЛОВ" -> viewModel.usaActionMovies.value ?: emptyList()
+                    "ТОП 250 ФИЛЬМОВ" -> (viewModel.screenStatePremieres.value as? ScreenState.Success)?.data ?: emptyList()
+                    "Популярное" -> (viewModel.screenStatePopular.value as? ScreenState.Success)?.data ?: emptyList()
+                    "ТОП 250 СЕРИАЛОВ" -> (viewModel.screenStateSeries.value as? ScreenState.Success)?.data ?: emptyList()
                     else -> emptyList()
                 }
+
                 if (category != null) {
                     AllMoviesView(movies, category) { navController.popBackStack() }
                 }
             }
-
         }
     }
 }
