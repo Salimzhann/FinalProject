@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.finalproject.domain.viewmodel.MainPageViewModel
+import com.example.finalproject.ui.viewmodel.MainPageViewModel
 import com.example.finalproject.R
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.ScreenState

@@ -1,4 +1,4 @@
-package com.example.finalproject.data.repository
+package com.example.finalproject.data.remote
 
 import com.example.finalproject.domain.model.MovieResponse
 import retrofit2.Call

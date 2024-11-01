@@ -1,8 +1,8 @@
-package com.example.finalproject.domain.viewmodel
+package com.example.finalproject.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.finalproject.data.repository.FilmApiService
+import com.example.finalproject.data.remote.FilmApiService
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.MovieResponse
 import com.example.finalproject.domain.model.ScreenState
@@ -12,6 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 class MainPageViewModel : ViewModel() {
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://kinopoiskapiunofficial.tech/")
