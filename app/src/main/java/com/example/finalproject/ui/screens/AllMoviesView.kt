@@ -38,7 +38,7 @@ fun AllMoviesView(
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(60.dp),
             modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
             items(movies) { movie ->
