@@ -73,7 +73,7 @@ fun MainScreen() {
             composable("movieDetail/{movieId}") { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getString("movieId")?.toLongOrNull()
                 if (movieId != null) {
-                    MovieDetailScreen(movieId, viewModel, navController)
+                    MovieDetailScreen(movieId, viewModel)
                 } else {
                     Text("Invalid movie ID")
                 }
