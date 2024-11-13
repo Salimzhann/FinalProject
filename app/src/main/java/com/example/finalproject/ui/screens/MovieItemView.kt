@@ -31,6 +31,7 @@ fun MovieItemView(movie: MovieItem) {
         modifier = Modifier
             .padding(8.dp)
             .width(111.dp)
+            .height(230.dp)
             .clickable {
                 //
             },

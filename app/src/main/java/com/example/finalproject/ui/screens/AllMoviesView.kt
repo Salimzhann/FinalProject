@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.style.TextAlign
 import com.example.finalproject.domain.model.MovieItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,10 +33,17 @@ fun AllMoviesView(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
-                title = { Text(categoryName) }
+                title = {
+                    Text(
+                        text = categoryName,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
             )
         }
-    ) { innerPadding ->
+    )
+    { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(80.dp),

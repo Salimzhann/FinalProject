@@ -112,7 +112,7 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
 
 @Composable
 fun MovieSection(title: String, movies: List<MovieItem>, navController: NavController, category: String) {
-    Column(modifier = Modifier.height(330.dp)) {
+    Column(modifier = Modifier.height(270.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
