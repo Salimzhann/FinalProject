@@ -1,8 +1,10 @@
 package com.example.finalproject.domain.model
 
-sealed interface ScreenState {
-    data object Initial : ScreenState
-    data object Loading : ScreenState
-    data class Success(val data: List<MovieItem>) : ScreenState
-    data class Error(val message: String) : ScreenState
+sealed class ScreenState<out T> {
+    data object Initial : ScreenState<Nothing>()
+    data object Loading : ScreenState<Nothing>()
+    data class Success<T>(val data: T) : ScreenState<T>()
+    data class Error(val message: String) : ScreenState<Nothing>()
 }
+
+

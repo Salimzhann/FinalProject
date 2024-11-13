@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.screens.AllMoviesView
+import com.example.finalproject.ui.screens.MovieDetailScreen
 import com.example.finalproject.ui.screens.ProfileScreen
 import com.example.finalproject.ui.screens.SearchScreen
 import com.example.finalproject.ui.screens.SetupUI
@@ -65,6 +67,15 @@ fun MainScreen() {
 
                 if (category != null) {
                     AllMoviesView(movies, category) { navController.popBackStack() }
+                }
+            }
+            composable("movieDetail/{movieId}") { backStackEntry ->
+                val movieId = backStackEntry.arguments?.getString("movieId")?.toLongOrNull()
+                if (movieId != null) {
+                    MovieDetailScreen(movieId, viewModel)
+                } else {
+                    // Handle the case where movieId is null or not properly formatted
+                    Text("Error: Invalid movie ID")
                 }
             }
         }

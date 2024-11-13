@@ -25,16 +25,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.finalproject.domain.model.MovieItem
 
 @Composable
-fun MovieItemView(movie: MovieItem) {
+fun MovieItemView(movie: MovieItem, onClick: () -> Unit) {
     Log.d("MOVIE_ITEM_VIEW", "Rendering movie: ${movie.nameOriginal}")
     Column(
         modifier = Modifier
             .padding(8.dp)
             .width(111.dp)
             .height(230.dp)
-            .clickable {
-                //
-            },
+            .clickable(onClick = onClick),  // Add click handling here
         horizontalAlignment = Alignment.Start
     ) {
         Box {
@@ -54,15 +52,15 @@ fun MovieItemView(movie: MovieItem) {
                     )
                     .width(20.dp)
                     .height(12.dp)
-            ) {
-                Text(
-                    text = movie.ratingKinopoisk.toString(),
-                    color = Color.White,
-                    fontSize = 8.sp,
-                    fontWeight = FontWeight.W500,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+                    ) {
+                        Text(
+                            text = movie.ratingKinopoisk?.toString() ?: "N/A",
+                            color = Color.White,
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.W500,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
         }
 
         Spacer(modifier = Modifier.height(4.dp))

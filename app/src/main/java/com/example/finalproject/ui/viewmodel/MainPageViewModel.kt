@@ -3,6 +3,7 @@ package com.example.finalproject.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.finalproject.data.remote.FilmApiService
+import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.MovieResponse
 import com.example.finalproject.domain.model.ScreenState
@@ -29,9 +30,10 @@ class MainPageViewModel : ViewModel() {
 
     private val api = retrofit.create(FilmApiService::class.java)
 
-    val screenStatePremieres = MutableLiveData<ScreenState>(ScreenState.Initial)
-    val screenStatePopular = MutableLiveData<ScreenState>(ScreenState.Initial)
-    val screenStateSeries = MutableLiveData<ScreenState>(ScreenState.Initial)
+    val screenStatePremieres = MutableLiveData<ScreenState<List<MovieItem>>>(ScreenState.Initial)
+    val screenStatePopular = MutableLiveData<ScreenState<List<MovieItem>>>(ScreenState.Initial)
+    val screenStateSeries = MutableLiveData<ScreenState<List<MovieItem>>>(ScreenState.Initial)
+    val screenStateFilmDetail = MutableLiveData<ScreenState<FilmDetail>>(ScreenState.Initial)
 
     init {
         loadMovies()
@@ -45,7 +47,7 @@ class MainPageViewModel : ViewModel() {
         loadMovieData("TOP_250_TV_SHOWS", screenStateSeries)
     }
 
-    private fun loadMovieData(type: String, stateLiveData: MutableLiveData<ScreenState>) {
+    private fun loadMovieData(type: String, stateLiveData: MutableLiveData<ScreenState<List<MovieItem>>>) {
         stateLiveData.value = ScreenState.Loading
         api.getCollections(type, 1).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
@@ -59,6 +61,27 @@ class MainPageViewModel : ViewModel() {
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                 stateLiveData.value = ScreenState.Error("Request failed: ${t.message}")
+            }
+        })
+    }
+
+    fun loadFilmDetailById(filmId: Long) {
+        screenStateFilmDetail.value = ScreenState.Loading
+        api.getFilmById(filmId).enqueue(object : Callback<FilmDetail> {
+            override fun onResponse(call: Call<FilmDetail>, response: Response<FilmDetail>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        screenStateFilmDetail.value = ScreenState.Success(it)
+                    } ?: run {
+                        screenStateFilmDetail.value = ScreenState.Error("No film details found.")
+                    }
+                } else {
+                    screenStateFilmDetail.value = ScreenState.Error("Failed to load film detail: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<FilmDetail>, t: Throwable) {
+                screenStateFilmDetail.value = ScreenState.Error("Request failed: ${t.message}")
             }
         })
     }

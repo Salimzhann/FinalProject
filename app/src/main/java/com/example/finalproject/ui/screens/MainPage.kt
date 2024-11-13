@@ -109,7 +109,6 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
         }
     }
 }
-
 @Composable
 fun MovieSection(title: String, movies: List<MovieItem>, navController: NavController, category: String) {
     Column(modifier = Modifier.height(270.dp)) {
@@ -134,7 +133,10 @@ fun MovieSection(title: String, movies: List<MovieItem>, navController: NavContr
         }
         LazyRow(contentPadding = PaddingValues(start = 10.dp)) {
             items(movies.size) { index ->
-                MovieItemView(movie = movies[index])
+                MovieItemView(movie = movies[index]) {
+                    // Define navigation action on click
+                    navController.navigate("movieDetail/${movies[index].kinopoiskId}")
+                }
             }
         }
     }

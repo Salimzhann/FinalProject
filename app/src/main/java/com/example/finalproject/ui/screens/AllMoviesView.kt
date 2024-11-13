@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,7 +51,10 @@ fun AllMoviesView(
             modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
             items(movies) { movie ->
-                MovieItemView(movie = movie)
+                MovieItemView(movie = movie, onClick = {
+                    // Placeholder action, replace with your intended action
+                    Log.d("MovieItemClick", "Clicked on ${movie.nameRu ?: movie.nameOriginal}")
+                })
             }
         }
     }
