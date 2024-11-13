@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
 import com.example.finalproject.domain.model.MovieItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,6 +25,7 @@ import com.example.finalproject.domain.model.MovieItem
 fun AllMoviesView(
     movies: List<MovieItem>,
     categoryName: String,
+    navController: NavController,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -50,11 +52,11 @@ fun AllMoviesView(
             contentPadding = PaddingValues(80.dp),
             modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
-            items(movies) { movie ->
-                MovieItemView(movie = movie, onClick = {
-                    // Placeholder action, replace with your intended action
-                    Log.d("MovieItemClick", "Clicked on ${movie.nameRu ?: movie.nameOriginal}")
-                })
+            items(movies.size) { index ->
+                MovieItemView(movie = movies[index]) {
+                    // Define navigation action on click
+                    navController.navigate("movieDetail/${movies[index].kinopoiskId}")
+                }
             }
         }
     }

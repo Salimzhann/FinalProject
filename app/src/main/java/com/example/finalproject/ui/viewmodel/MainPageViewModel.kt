@@ -27,7 +27,7 @@ class MainPageViewModel : ViewModel() {
         .client(
             OkHttpClient.Builder().addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("X-API-KEY", "e82baed2-914f-4384-999a-a71af825d6bd")
+                    .addHeader("X-API-KEY", "b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f")
                     .build()
                 chain.proceed(request)
             }.build()

@@ -1,7 +1,11 @@
 package com.example.finalproject.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,105 +25,157 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.finalproject.R
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ScreenState
+import com.example.finalproject.domain.model.StaffMember
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 
 @Composable
-fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel) {
+fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController: NavController) {
 
     LaunchedEffect(movieId) {
-        viewModel.loadFilmDetailById(movieId)
+        viewModel.loadFilmDetailAndStaffById(movieId)
     }
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
+    val staffMember by viewModel.staffMembers.observeAsState(emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (filmDetailState) {
             is ScreenState.Success -> {
                 val filmDetail = (filmDetailState as ScreenState.Success<FilmDetail>).data
-                Column(
+                LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(400.dp)
-                    ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(filmDetail.posterUrl),
-                            contentDescription = null,
+                    item {
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            contentScale = ContentScale.Crop
-                        )
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .fillMaxWidth()
+                                .height(400.dp)
                         ) {
-                            Text(
-                                text = filmDetail.nameRu.toString(),
-                                style = MaterialTheme.typography.headlineLarge,
-                                color = Color.White
+                            Image(
+                                painter = rememberAsyncImagePainter(filmDetail.posterUrl),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                contentScale = ContentScale.Crop
                             )
-                            Text(
-                                text = "Rating: ${filmDetail.ratingImdb}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(400.dp)
+                                    .background(
+                                        brush = Brush.verticalGradient(
+                                            colors = listOf(Color.Transparent, Color.Black),
+                                            startY = 0f,
+                                            endY = Float.POSITIVE_INFINITY
+                                        )
+                                    )
                             )
-                            Text(
-                                text = "${filmDetail.year}, ${filmDetail.genres.joinToString(", ") { it.genre }}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White
-                            )
+
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "${filmDetail.ratingImdb} ${filmDetail.nameRu}",
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 20.sp,
+                                    color = Color.White.copy(alpha = 0.6f)
+                                )
+                                Text(
+                                    text = "${filmDetail.year}, ${filmDetail.genres.joinToString(", ") { it.genre }}",
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 20.sp,
+                                    color = Color.White.copy(alpha = 0.6f)
+                                )
+                                Text(
+                                    text = "${filmDetail.countries.joinToString(", ") { it.country }}, ${
+                                        calculateTime(
+                                            filmDetail.filmLength ?: 0
+                                        )
+                                    }, ${
+                                        filmDetail.ratingAgeLimits?.replace(
+                                            Regex("[^0-9]"),
+                                            ""
+                                        )
+                                    } +",
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 20.sp,
+                                    color = Color.White.copy(alpha = 0.6f)
+                                )
+
+                                Spacer(modifier = Modifier.height(10.dp))
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 32.dp),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Favorite,
+                                        contentDescription = "Like",
+                                        tint = Color.White
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Filled.Star,
+                                        contentDescription = "Star",
+                                        tint = Color.White
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Filled.Share,
+                                        contentDescription = "Share",
+                                        tint = Color.White
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Filled.MoreVert,
+                                        contentDescription = "More options",
+                                        tint = Color.White
+                                    )
+                                }
+                            }
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 32.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = "Like"
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.Star,
-                            contentDescription = "Bookmark"
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = "Share"
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "More options"
-                        )
+                    item {
+                        Spacer(modifier = Modifier.height(30.dp))
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    item {
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            Text(
+                                text = filmDetail.shortDescription ?: "No description available.",
+                                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
+                                fontWeight = FontWeight.Bold
+                            )
 
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        Text(
-                            text = "Plot Summary",
-                            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = filmDetail.description ?: "No description available.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            lineHeight = 20.sp
-                        )
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Text(
+                                text = filmDetail.description ?: "No description available.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                lineHeight = 20.sp
+                            )
+                        }
+                    }
+                    item {
+                        LazyRow {
+                            items(staffMember) { staff ->
+                                StaffCard(staff, onClick = {
+                                    navController.navigate("actorDetail/${staff.staffId}")
+                                })
+                            }
+                        }
                     }
                 }
             }
@@ -128,4 +184,10 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel) {
             else -> Unit
         }
     }
+}
+
+private fun calculateTime(minute: Int): String {
+    val hours = minute / 60
+    val minutes = minute % 60
+    return "$hours ч $minutes мин"
 }
