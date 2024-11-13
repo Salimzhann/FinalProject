@@ -30,12 +30,10 @@ import com.example.finalproject.ui.viewmodel.MainPageViewModel
 
 @Composable
 fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel) {
-    // Request movie details
+
     LaunchedEffect(movieId) {
         viewModel.loadFilmDetailById(movieId)
     }
-
-    // Observe movie detail state
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -46,14 +44,13 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel) {
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Top image background
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(400.dp)
                     ) {
                         Image(
-                            painter = rememberAsyncImagePainter(filmDetail.posterUrl), // Replace with movie poster image if available
+                            painter = rememberAsyncImagePainter(filmDetail.posterUrl),
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -85,7 +82,6 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Icons row
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -112,7 +108,6 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Description
                     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                         Text(
                             text = "Plot Summary",
