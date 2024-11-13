@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
 import com.example.finalproject.domain.model.ScreenState
+import com.example.finalproject.ui.screens.ActorDetailScreen
 import com.example.finalproject.ui.screens.AllMoviesView
 import com.example.finalproject.ui.screens.MovieDetailScreen
 import com.example.finalproject.ui.screens.ProfileScreen
@@ -72,10 +73,17 @@ fun MainScreen() {
             composable("movieDetail/{movieId}") { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getString("movieId")?.toLongOrNull()
                 if (movieId != null) {
-                    MovieDetailScreen(movieId, viewModel)
+                    MovieDetailScreen(movieId, viewModel, navController)
                 } else {
-                    // Handle the case where movieId is null or not properly formatted
-                    Text("Error: Invalid movie ID")
+                    Text("Invalid movie ID")
+                }
+            }
+            composable("actorDetail/{staffId}") { backStackEntry ->
+                val staffId = backStackEntry.arguments?.getString("staffId")?.toIntOrNull()
+                if (staffId != null) {
+                    ActorDetailScreen(staffId, viewModel)
+                } else {
+                    Text("Invalid Staff ID")
                 }
             }
         }
