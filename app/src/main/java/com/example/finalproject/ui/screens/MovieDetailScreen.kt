@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.TextButton
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -169,6 +170,31 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                         }
                     }
                     item {
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 15.dp)
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "В фильме снимались",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 25.sp
+                            )
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            TextButton(onClick = {
+
+                            }) {
+                                Text(
+                                    text = "${staffMember.size} >",
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 25.sp,
+                                    color = Color.Blue,
+                                )
+                            }
+                        }
                         LazyRow {
                             items(staffMember) { staff ->
                                 StaffCard(staff, onClick = {

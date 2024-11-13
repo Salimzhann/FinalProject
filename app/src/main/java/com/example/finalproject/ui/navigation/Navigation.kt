@@ -40,10 +40,7 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            val showBottomBar = navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
-                "home", "search", "profile"
-            )
-            if (showBottomBar) MyBottomNavigation(navController)
+            MyBottomNavigation(navController)
         }
     ) { innerPadding ->
         NavHost(navController, startDestination = "home", Modifier.padding(innerPadding)) {
