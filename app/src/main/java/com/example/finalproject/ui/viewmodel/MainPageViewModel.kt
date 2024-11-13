@@ -41,7 +41,7 @@ class MainPageViewModel : ViewModel() {
     val screenStateSeries = MutableLiveData<ScreenState<List<MovieItem>>>(ScreenState.Initial)
     val screenStateFilmDetail = MutableLiveData<ScreenState<FilmDetail>>(ScreenState.Initial)
     val staffMembers = MutableLiveData<List<StaffMember>>()
-    val filmImages = MutableLiveData<List<ImageItem>>(listOf())
+    val filmImages = MutableLiveData<List<ImageItem>>()
     val isLoadingImages = MutableLiveData(false)
     val actorDetails = MutableLiveData<ActorDetail>(null)
 
@@ -128,7 +128,7 @@ class MainPageViewModel : ViewModel() {
         }
     }
 
-    fun loadFilmImages(filmId: Int, type: String? = "STILL", page: Int = 1) {
+    fun loadFilmImages(filmId: Long, type: String? = "STILL", page: Int = 1) {
         viewModelScope.launch {
             isLoadingImages.value = true
             try {

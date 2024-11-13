@@ -42,9 +42,11 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
 
     LaunchedEffect(movieId) {
         viewModel.loadFilmDetailAndStaffById(movieId)
+        viewModel.loadFilmImages(movieId)
     }
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
     val staffMember by viewModel.staffMembers.observeAsState(emptyList())
+    val galery by viewModel.filmImages.observeAsState((emptyList()))
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (filmDetailState) {
@@ -200,6 +202,73 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                 StaffCard(staff, onClick = {
                                     navController.navigate("actorDetail/${staff.staffId}")
                                 })
+                            }
+                        }
+                    }
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "Над фильмом работали",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 25.sp
+                            )
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            TextButton(onClick = {
+
+                            }) {
+                                Text(
+                                    text = "${staffMember.size} >",
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 25.sp,
+                                    color = Color.Blue,
+                                )
+                            }
+                        }
+                        LazyRow {
+                            items(staffMember) { staff ->
+                                StaffCard(staff, onClick = {
+                                    navController.navigate("actorDetail/${staff.staffId}")
+                                })
+                            }
+                        }
+                    }
+
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 15.dp)
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                text = "Галерея",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 25.sp
+                            )
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            TextButton(onClick = {
+
+                            }) {
+                                Text(
+                                    text = "${staffMember.size} >",
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 25.sp,
+                                    color = Color.Blue,
+                                )
+                            }
+                        }
+                        LazyRow {
+                            items(galery) { galery ->
+                                
                             }
                         }
                     }

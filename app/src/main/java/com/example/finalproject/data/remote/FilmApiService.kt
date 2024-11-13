@@ -22,7 +22,7 @@ interface FilmApiService {
     suspend fun getActorDetailById(@Path("id") id: Int): Response<ActorDetail>
     @GET("/api/v2.2/films/{id}/images")
     suspend fun getFilmImages(
-        @Path("id") filmId: Int,
+        @Path("id") filmId: Long,
         @Query("type") type: String? = null,
         @Query("page") page: Int? = 1
     ): Response<FilmImagesResponse>
