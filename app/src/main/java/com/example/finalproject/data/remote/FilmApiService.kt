@@ -20,13 +20,13 @@ private val retrofit = Retrofit.Builder()
     .client(
         OkHttpClient.Builder().addInterceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader("X-API-KEY", "b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f")
+                .addHeader("X-API-KEY", "e82baed2-914f-4384-999a-a71af825d6bd")
                 .build()
             chain.proceed(request)
         }.build()
     )
     .build()
-
+//b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f    ||    e82baed2-914f-4384-999a-a71af825d6bd
 val api = retrofit.create(FilmApiService::class.java)
 
 interface FilmApiService {

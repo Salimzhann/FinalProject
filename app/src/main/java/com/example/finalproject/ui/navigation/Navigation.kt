@@ -79,7 +79,7 @@ fun MainScreen() {
             composable("actorDetail/{staffId}") { backStackEntry ->
                 val staffId = backStackEntry.arguments?.getString("staffId")?.toIntOrNull()
                 if (staffId != null) {
-                    ActorDetailScreen(staffId, viewModel)
+                    ActorDetailScreen(staffId, viewModel) { navController.popBackStack() }
                 } else {
                     Text("Invalid Staff ID")
                 }
