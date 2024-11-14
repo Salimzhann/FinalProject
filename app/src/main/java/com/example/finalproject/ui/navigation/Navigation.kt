@@ -17,7 +17,6 @@ import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
@@ -114,7 +113,12 @@ fun MyBottomNavigation(navController: NavController) {
             .background(Color.White)
     ) {
         items.forEach { screen ->
-            val isSelected = currentRoute == screen.route
+            val isHomeRelated = currentRoute == "home" || currentRoute?.startsWith("movieDetail/") == true ||
+                    currentRoute?.startsWith("actorDetail/") == true || currentRoute?.startsWith("galleryScreen/") == true
+            val isSelected = when (screen.route) {
+                Icons.Home.route -> isHomeRelated
+                else -> currentRoute == screen.route
+            }
             BottomNavigationItem(
                 icon = {
                     Icon(
@@ -126,22 +130,29 @@ fun MyBottomNavigation(navController: NavController) {
                 },
                 selected = isSelected,
                 onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    if (screen.route == Icons.Home.route) {
+                        navController.popBackStack(navController.graph.startDestinationId, inclusive = false)
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    } else {
+                        if (currentRoute != screen.route) {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
                     }
                 },
                 alwaysShowLabel = false
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NavigationPreview() {
-    MainScreen()
 }
