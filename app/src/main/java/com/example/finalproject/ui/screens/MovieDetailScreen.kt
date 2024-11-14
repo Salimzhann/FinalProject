@@ -201,14 +201,27 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                 )
                             }
                         }
-                        LazyRow {
+                        LazyRow(
+                            contentPadding = PaddingValues(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
                             val actors = staffMember.filter { it.professionText.contains("Актеры") }
-                            items(actors.take(actors.size / 2)) { staff ->
-                                StaffCard(staff, onClick = {
-                                    navController.navigate("actorDetail/${staff.staffId}")
-                                })
+                            items(actors.chunked(4)) { actorChunk ->
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                                    modifier = Modifier.fillMaxHeight()
+                                ) {
+                                    actorChunk.forEach { staff ->
+                                        StaffCard(staff, onClick = {
+                                            navController.navigate("actorDetail/${staff.staffId}")
+                                        })
+                                    }
+                                }
                             }
                         }
+
                     }
                     item {
                         Row(
@@ -239,10 +252,17 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                         }
                         LazyRow {
                             val otherStaffs = staffMember.filter { !it.professionText.contains("Актеры") }
-                            items(otherStaffs.take(otherStaffs.size / 2)) { staff ->
-                                StaffCard(staff, onClick = {
-                                    navController.navigate("actorDetail/${staff.staffId}")
-                                })
+                            items(otherStaffs.chunked(3)) { actorChunk ->
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                                    modifier = Modifier.fillMaxHeight()
+                                ) {
+                                    actorChunk.forEach { staff ->
+                                        StaffCard(staff, onClick = {
+                                            navController.navigate("actorDetail/${staff.staffId}")
+                                        })
+                                    }
+                                }
                             }
                         }
                     }
