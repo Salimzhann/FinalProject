@@ -19,7 +19,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.W600
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -36,10 +45,12 @@ import coil.compose.rememberImagePainter
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActorDetailScreen(
     staffId: Int,
-    viewModel: MainPageViewModel
+    viewModel: MainPageViewModel,
+    onNavigateBack: () -> Unit
 ) {
     val actorDetail by viewModel.actorDetails.observeAsState()
 
@@ -54,7 +65,15 @@ fun ActorDetailScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Top Profile Section
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back")
+                    }
+                }
+            )
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -101,6 +120,7 @@ fun ActorDetailScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {

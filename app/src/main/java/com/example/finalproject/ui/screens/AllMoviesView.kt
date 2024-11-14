@@ -37,11 +37,18 @@ fun AllMoviesView(
                     }
                 },
                 title = {
-                    Text(
-                        text = categoryName,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 48.dp)  // Add padding equal to the width of the navigation icon
+                    ){
+                        Text(
+                            text = categoryName,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
                 }
             )
         }

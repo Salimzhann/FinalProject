@@ -20,11 +20,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +40,7 @@ import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController: NavController) {
 
@@ -66,7 +73,6 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                     .fillMaxWidth(),
                                 contentScale = ContentScale.Crop
                             )
-
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -282,6 +288,18 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
             is ScreenState.Error -> Text("Failed to load details", color = Color.Red, modifier = Modifier.align(Alignment.Center))
             else -> Unit
         }
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,  // Set the container color to transparent
+                titleContentColor = Color.White      // Set title color as needed
+            ),
+            title = {},
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back")
+                }
+            },
+        )
     }
 }
 
