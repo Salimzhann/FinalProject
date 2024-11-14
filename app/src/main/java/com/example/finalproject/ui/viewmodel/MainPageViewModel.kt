@@ -27,8 +27,13 @@ class MainPageViewModel : ViewModel() {
     val filmImages = MutableLiveData<List<ImageItem>>()
     val isLoadingImages = MutableLiveData(false)
     val actorDetails = MutableLiveData<ActorDetail>(null)
+    val allDataLoaded = MutableLiveData<Boolean>(false)
 
     init {
+        loadMovies()
+    }
+
+    fun loadAllData() {
         loadMovies()
     }
 
@@ -46,6 +51,7 @@ class MainPageViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val movies = response.body()?.items ?: emptyList()
                     stateLiveData.value = ScreenState.Success(movies)
+                    checkAllDataLoaded()
                 } else {
                     stateLiveData.value = ScreenState.Error("Failed to load data: ${response.errorBody()?.string()}")
                 }
@@ -55,6 +61,13 @@ class MainPageViewModel : ViewModel() {
                 stateLiveData.value = ScreenState.Error("Request failed: ${t.message}")
             }
         })
+    }
+    private fun checkAllDataLoaded() {
+        if (screenStatePremieres.value is ScreenState.Success &&
+            screenStatePopular.value is ScreenState.Success &&
+            screenStateSeries.value is ScreenState.Success) {
+            allDataLoaded.value = true
+        }
     }
     fun loadFilmDetailById(filmId: Long) {
         screenStateFilmDetail.value = ScreenState.Loading

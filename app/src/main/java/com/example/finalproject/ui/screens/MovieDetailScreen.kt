@@ -201,12 +201,7 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                 )
                             }
                         }
-                        LazyRow(
-                            contentPadding = PaddingValues(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
+                        LazyRow {
                             val actors = staffMember.filter { it.professionText.contains("Актеры") }
                             items(actors.chunked(4)) { actorChunk ->
                                 Column(
@@ -314,8 +309,8 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
         }
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent,  // Set the container color to transparent
-                titleContentColor = Color.White      // Set title color as needed
+                containerColor = Color.Transparent,
+                titleContentColor = Color.White
             ),
             title = {},
             navigationIcon = {
