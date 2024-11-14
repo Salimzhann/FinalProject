@@ -28,6 +28,7 @@ import com.example.finalproject.domain.model.Icons
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.screens.ActorDetailScreen
 import com.example.finalproject.ui.screens.AllMoviesView
+import com.example.finalproject.ui.screens.GalleryScreen
 import com.example.finalproject.ui.screens.MovieDetailScreen
 import com.example.finalproject.ui.screens.ProfileScreen
 import com.example.finalproject.ui.screens.SearchScreen
@@ -81,6 +82,14 @@ fun MainScreen() {
                     ActorDetailScreen(staffId, viewModel)
                 } else {
                     Text("Invalid Staff ID")
+                }
+            }
+            composable("galleryScreen/{movieId}") { backStackEntry ->
+                val movieId = backStackEntry.arguments?.getString("movieId")?.toLongOrNull()
+                if (movieId != null) {
+                    GalleryScreen(viewModel, movieId) { navController.popBackStack() }
+                } else {
+                    Text("Invalid movie ID")
                 }
             }
         }

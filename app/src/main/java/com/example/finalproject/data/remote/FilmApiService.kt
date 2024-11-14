@@ -5,11 +5,29 @@ import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.FilmImagesResponse
 import com.example.finalproject.domain.model.MovieResponse
 import com.example.finalproject.domain.model.StaffMember
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+
+private val retrofit = Retrofit.Builder()
+    .baseUrl("https://kinopoiskapiunofficial.tech/")
+    .addConverterFactory(GsonConverterFactory.create())
+    .client(
+        OkHttpClient.Builder().addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("X-API-KEY", "b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f")
+                .build()
+            chain.proceed(request)
+        }.build()
+    )
+    .build()
+
+val api = retrofit.create(FilmApiService::class.java)
 
 interface FilmApiService {
     @GET("api/v2.2/films/collections")
