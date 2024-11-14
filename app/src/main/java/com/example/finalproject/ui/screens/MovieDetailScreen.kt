@@ -17,7 +17,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
@@ -31,10 +30,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.finalproject.R
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ScreenState
-import com.example.finalproject.domain.model.StaffMember
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 
 @Composable
@@ -46,7 +43,7 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
     }
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
     val staffMember by viewModel.staffMembers.observeAsState(emptyList())
-    val galery by viewModel.filmImages.observeAsState((emptyList()))
+    val gallery by viewModel.filmImages.observeAsState(emptyList())
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (filmDetailState) {
@@ -256,19 +253,26 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                             Spacer(modifier = Modifier.weight(1f))
 
                             TextButton(onClick = {
-
+                                navController.navigate("galleryScreen/${movieId}")
                             }) {
                                 Text(
-                                    text = "${staffMember.size} >",
+                                    text = "${gallery.size} >",
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 25.sp,
                                     color = Color.Blue,
                                 )
                             }
                         }
-                        LazyRow {
-                            items(galery) { galery ->
-                                
+                        LazyRow(
+                            contentPadding = PaddingValues(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .height(160.dp)
+                                .fillMaxWidth()
+                        ) {
+                            items(gallery) { galleryItem ->
+                                ImageCard(galleryItem)
                             }
                         }
                     }

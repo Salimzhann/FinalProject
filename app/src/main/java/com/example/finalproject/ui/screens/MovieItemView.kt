@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.finalproject.domain.model.FilmBrief
 import com.example.finalproject.domain.model.MovieItem
 
 @Composable
@@ -32,7 +33,7 @@ fun MovieItemView(movie: MovieItem, onClick: () -> Unit) {
             .padding(8.dp)
             .width(111.dp)
             .height(230.dp)
-            .clickable(onClick = onClick),  // Add click handling here
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.Start
     ) {
         Box {
