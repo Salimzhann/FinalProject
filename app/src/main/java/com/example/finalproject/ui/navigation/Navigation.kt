@@ -114,7 +114,7 @@ fun MyBottomNavigation(navController: NavController) {
     ) {
         items.forEach { screen ->
             val isHomeRelated = currentRoute == "home" || currentRoute?.startsWith("movieDetail/") == true ||
-                    currentRoute?.startsWith("actorDetail/") == true || currentRoute?.startsWith("galleryScreen/") == true
+                    currentRoute?.startsWith("allMovies/") == true || currentRoute?.startsWith("actorDetail/") == true || currentRoute?.startsWith("galleryScreen/") == true
             val isSelected = when (screen.route) {
                 Icons.Home.route -> isHomeRelated
                 else -> currentRoute == screen.route

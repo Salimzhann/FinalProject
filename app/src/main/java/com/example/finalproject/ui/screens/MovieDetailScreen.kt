@@ -192,8 +192,9 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                             TextButton(onClick = {
 
                             }) {
+                                val actorsCount = staffMember.count { it.professionText.contains("Актеры") }
                                 Text(
-                                    text = "${staffMember.size} >",
+                                    text = "$actorsCount >",
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 25.sp,
                                     color = Color.Blue,
@@ -201,7 +202,8 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                             }
                         }
                         LazyRow {
-                            items(staffMember) { staff ->
+                            val actors = staffMember.filter { it.professionText.contains("Актеры") }
+                            items(actors.take(actors.size / 2)) { staff ->
                                 StaffCard(staff, onClick = {
                                     navController.navigate("actorDetail/${staff.staffId}")
                                 })
@@ -226,8 +228,9 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                             TextButton(onClick = {
 
                             }) {
+                                val otherStaffs = staffMember.count { !it.professionText.contains("Актеры") }
                                 Text(
-                                    text = "${staffMember.size} >",
+                                    text = "$otherStaffs >",
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 25.sp,
                                     color = Color.Blue,
@@ -235,7 +238,8 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                             }
                         }
                         LazyRow {
-                            items(staffMember) { staff ->
+                            val otherStaffs = staffMember.filter { !it.professionText.contains("Актеры") }
+                            items(otherStaffs.take(otherStaffs.size / 2)) { staff ->
                                 StaffCard(staff, onClick = {
                                     navController.navigate("actorDetail/${staff.staffId}")
                                 })
