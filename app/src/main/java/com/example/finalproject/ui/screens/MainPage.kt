@@ -134,7 +134,6 @@ fun MovieSection(title: String, movies: List<MovieItem>, navController: NavContr
         LazyRow(contentPadding = PaddingValues(start = 10.dp)) {
             items(movies.size) { index ->
                 MovieItemView(movie = movies[index]) {
-                    // Define navigation action on click
                     navController.navigate("movieDetail/${movies[index].kinopoiskId}")
                 }
             }

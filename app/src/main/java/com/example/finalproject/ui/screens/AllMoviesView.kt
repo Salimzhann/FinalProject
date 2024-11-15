@@ -40,7 +40,7 @@ fun AllMoviesView(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 48.dp)  // Add padding equal to the width of the navigation icon
+                            .padding(end = 48.dp)
                     ){
                         Text(
                             text = categoryName,
@@ -61,7 +61,6 @@ fun AllMoviesView(
         ) {
             items(movies.size) { index ->
                 MovieItemView(movie = movies[index]) {
-                    // Define navigation action on click
                     navController.navigate("movieDetail/${movies[index].kinopoiskId}")
                 }
             }
