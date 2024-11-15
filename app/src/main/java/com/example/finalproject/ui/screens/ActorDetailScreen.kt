@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +30,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -53,18 +59,8 @@ fun ActorDetailScreen(
     onNavigateBack: () -> Unit
 ) {
     val actorDetail by viewModel.actorDetails.observeAsState()
-
-    LaunchedEffect(staffId) {
-        viewModel.loadActorDetails(staffId)
-    }
-
-    actorDetail?.let { actor ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
+    Scaffold(
+        topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
@@ -73,41 +69,55 @@ fun ActorDetailScreen(
                     }
                 }
             )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(actor.posterUrl),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.Gray)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(
-                        text = actor.nameRu,
-                        style = MaterialTheme.typography.h5,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = actor.profession,
-                        style = MaterialTheme.typography.body2,
-                        color = Color.Gray
-                    )
-                }
+        },
+        content = { padding->
+            LaunchedEffect(staffId) {
+                viewModel.loadActorDetails(staffId)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            actorDetail?.let { actor ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
 
-            Text(
-                text = "Лучшее",
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(actor.posterUrl),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(150.dp, 240.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Color.Gray)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                text = actor.nameRu,
+                                style = MaterialTheme.typography.h5,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = actor.profession,
+                                style = MaterialTheme.typography.body2,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Лучшее",
+                        style = MaterialTheme.typography.h6,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
 
 //            LazyRow {
 //                items(actor.films.take(3)) { film ->
@@ -117,36 +127,39 @@ fun ActorDetailScreen(
 //                }
 //            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Фильмография",
-                    style = MaterialTheme.typography.h6,
-                    fontWeight = FontWeight.Bold
-                )
-                TextButton(onClick = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Фильмография",
+                            style = MaterialTheme.typography.h6,
+                            fontWeight = FontWeight.Bold
+                        )
+                        TextButton(onClick = {
 //                    navController.navigate("filmographyPage/${staffId}")    // mynda navigation qosu kerek filmographiyaga
-                }) {
+                        }) {
+                            Text(
+                                text = "К списку",
+                                color = Color.Blue,
+                                style = MaterialTheme.typography.body2
+                            )
+                        }
+                    }
                     Text(
-                        text = "К списку",
-                        color = Color.Blue,
-                        style = MaterialTheme.typography.body2
+                        text = "${actor.films.size} фильма",
+                        style = MaterialTheme.typography.body2,
+                        color = Color.Gray
                     )
                 }
             }
-            Text(
-                text = "${actor.films.size} фильма",
-                style = MaterialTheme.typography.body2,
-                color = Color.Gray
-            )
+                ?: run {
+                    Text(text = "Loading...")
+                }
         }
-    }
-?: run {
-        Text(text = "Loading...")
-    }
+    )
+
 }

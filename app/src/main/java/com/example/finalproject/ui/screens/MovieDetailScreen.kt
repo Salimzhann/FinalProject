@@ -314,8 +314,8 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
         }
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent,  // Set the container color to transparent
-                titleContentColor = Color.White      // Set title color as needed
+                containerColor = Color.Transparent,
+                titleContentColor = Color.White
             ),
             title = {},
             navigationIcon = {
