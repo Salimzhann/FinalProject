@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -38,19 +39,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import com.example.finalproject.R
+import com.example.finalproject.domain.model.ActorDetail
+import com.example.finalproject.domain.model.FilmBrief
 import com.example.finalproject.domain.model.Genre
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.ScreenState
@@ -61,10 +68,9 @@ import com.example.finalproject.ui.viewmodel.MainPageViewModel
 fun ActorDetailScreen(
     staffId: Int,
     viewModel: MainPageViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    navController: NavController
 ) {
-
-    val movieItemsState = remember { mutableStateOf<List<MovieItem>>(emptyList()) }
     val actorDetail by viewModel.actorDetails.observeAsState()
 
     Scaffold(
@@ -78,7 +84,7 @@ fun ActorDetailScreen(
                 }
             )
         },
-        content = { padding->
+        content = { padding ->
             LaunchedEffect(staffId) {
                 viewModel.loadActorDetails(staffId)
             }
@@ -91,10 +97,7 @@ fun ActorDetailScreen(
                         .padding(16.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-
-                    Row(
-                        verticalAlignment = Alignment.Top
-                    ) {
+                    Row(verticalAlignment = Alignment.Top) {
                         Image(
                             painter = rememberAsyncImagePainter(actor.posterUrl),
                             contentDescription = null,
@@ -127,46 +130,6 @@ fun ActorDetailScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    LaunchedEffect(actor.films.take(4)) {
-                        movieItemsState.value = emptyList()
-
-                        for (film in actor.films) {
-                            viewModel.loadFilmDetailById(film.filmId.toLong())
-                        }
-                    }
-                    val screenState = viewModel.screenStateFilmDetail.observeAsState()
-
-                    screenState.value?.let { state ->
-                        if (state is ScreenState.Success) {
-                            val filmDetail = state.data
-                            val movieItem = MovieItem(
-                                kinopoiskId = filmDetail.kinopoiskId,
-                                nameRu = filmDetail.nameRu,
-                                nameEn = filmDetail.nameEn,
-                                nameOriginal = filmDetail.nameOriginal,
-                                countries = filmDetail.countries,
-                                genres = filmDetail.genres,
-                                ratingKinopoisk = filmDetail.ratingKinopoisk,
-                                ratingImbd = filmDetail.ratingImdb,
-                                year = filmDetail.year.toString(),
-                                type = filmDetail.type,
-                                posterUrl = filmDetail.posterUrl,
-                                posterUrlPreview = filmDetail.posterUrlPreview
-                            )
-                            movieItemsState.value = movieItemsState.value + movieItem
-                        }
-                    }
-
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(movieItemsState.value) { film ->
-                            MovieItemView(film) {
-                                Log.d("MovieItemClick", "Clicked on ${film.nameOriginal}")
-                            }
-                        }
-                    }
-
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -181,7 +144,7 @@ fun ActorDetailScreen(
                             fontWeight = FontWeight.Bold
                         )
                         TextButton(onClick = {
-//                    navController.navigate("filmographyPage/${staffId}")    // mynda navigation qosu kerek filmographiyaga
+                            navController.navigate("filmography/$staffId")
                         }) {
                             Text(
                                 text = "К списку",
@@ -196,11 +159,9 @@ fun ActorDetailScreen(
                         color = Color.Gray
                     )
                 }
+            } ?: run {
+                Text(text = "Loading...")
             }
-                ?: run {
-                    Text(text = "Loading...")
-                }
         }
     )
-
 }

@@ -21,12 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.screens.ActorDetailScreen
 import com.example.finalproject.ui.screens.AllMoviesView
+import com.example.finalproject.ui.screens.FilmographyItem
+import com.example.finalproject.ui.screens.FilmographyScreen
 import com.example.finalproject.ui.screens.GalleryScreen
 import com.example.finalproject.ui.screens.MovieDetailScreen
 import com.example.finalproject.ui.screens.ProfileScreen
@@ -78,7 +81,7 @@ fun MainScreen() {
             composable("actorDetail/{staffId}") { backStackEntry ->
                 val staffId = backStackEntry.arguments?.getString("staffId")?.toIntOrNull()
                 if (staffId != null) {
-                    ActorDetailScreen(staffId, viewModel) { navController.popBackStack() }
+                    ActorDetailScreen(staffId, viewModel, { navController.popBackStack() }, navController)
                 } else {
                     Text("Invalid Staff ID")
                 }
@@ -91,6 +94,15 @@ fun MainScreen() {
                     Text("Invalid movie ID")
                 }
             }
+            composable("filmography/{actorId}") { backStackEntry ->
+                val actorId = backStackEntry.arguments?.getString("actorId")?.toIntOrNull()
+                if (actorId != null) {
+                    FilmographyScreen(actorId) { navController.popBackStack() }
+                } else {
+                    Text("Invalid Actor ID")
+                }
+            }
+
         }
     }
 }
