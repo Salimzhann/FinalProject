@@ -1,4 +1,4 @@
-package com.example.finalproject.data.remote
+package com.example.finalproject.data.repository
 
 import com.example.finalproject.domain.model.ActorDetail
 import com.example.finalproject.domain.model.FilmDetail
@@ -28,9 +28,9 @@ private val retrofit = Retrofit.Builder()
     .build()
 //b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f    ||    e82baed2-914f-4384-999a-a71af825d6bd || beb20069-75af-4b17-8c30-5ea3932df8b5
 //116b74c8-d1ec-4c61-94d1-bc4dcf100f70
-val api = retrofit.create(FilmApiService::class.java)
+val api = retrofit.create(FilmRepository::class.java)
 
-interface FilmApiService {
+interface FilmRepository {
     @GET("api/v2.2/films/collections")
     fun getCollections(@Query("type") type: String, @Query("page") page: Int): Call<MovieResponse>
     @GET("api/v2.2/films/{id}")

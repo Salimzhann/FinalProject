@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.finalproject.data.remote.api
+import com.example.finalproject.data.repository.api
 import com.example.finalproject.domain.model.ActorDetail
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ImageItem

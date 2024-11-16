@@ -1,6 +1,5 @@
 package com.example.finalproject.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,19 +14,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,28 +32,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.W600
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import com.example.finalproject.R
-import com.example.finalproject.domain.model.ActorDetail
 import com.example.finalproject.domain.model.FilmBrief
-import com.example.finalproject.domain.model.Genre
-import com.example.finalproject.domain.model.MovieItem
-import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,13 +103,37 @@ fun ActorDetailScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Text(
-                        text = "Лучшее",
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Лучшее",
+                            style = MaterialTheme.typography.h6,
+                            fontWeight = FontWeight.Bold
+                        )
+                        TextButton(onClick = {
+                        }) {
+                            Text(
+                                text = "Все >",
+                                color = Color.Blue,
+                                style = MaterialTheme.typography.body2
+                            )
+                        }
+                    }
+
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    ) {
+                        val topFilms = actor.films.sortedByDescending { it.rating?.toDoubleOrNull() ?: 0.0 }.take(8)
+                        items(topFilms.size) { index ->
+                            FilmBriefCard(topFilms[index])
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -164,4 +168,40 @@ fun ActorDetailScreen(
             }
         }
     )
+}
+
+@Composable
+fun FilmBriefCard(film: FilmBrief) {
+    Column(
+        modifier = Modifier
+            .width(111.dp)
+            .height(230.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Box(
+            modifier = Modifier
+                .size(105.dp, 132.dp)
+                .background(Color.LightGray),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Text(
+                text = film.rating ?: "N/A",
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier
+                    .background(color = Color(0xFF3D3BFF), shape = RoundedCornerShape(20)),
+                color = Color.White
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = film.nameRu ?: film.nameEn ?: "",
+            style = MaterialTheme.typography.body1,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = film.description,
+            style = MaterialTheme.typography.body2,
+            color = Color.Gray
+        )
+    }
 }
