@@ -89,7 +89,7 @@ fun ActorDetailScreen(
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = actor.nameRu,
+                                text = actor.nameRu ?: actor.nameEn ?: "Актёр",
                                 style = MaterialTheme.typography.h5,
                                 fontWeight = FontWeight.Bold
                             )

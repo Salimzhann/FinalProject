@@ -3,8 +3,8 @@ package com.example.finalproject.domain.model
 data class ActorDetail(
     val personId: Int,
     val webUrl: String,
-    val nameRu: String,
-    val nameEn: String,
+    val nameRu: String?,
+    val nameEn: String?,
     val sex: String,
     val posterUrl: String,
     val growth: String?,
