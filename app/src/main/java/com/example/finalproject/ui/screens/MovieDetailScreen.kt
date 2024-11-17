@@ -33,9 +33,11 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.finalproject.R
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
@@ -128,25 +130,30 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                         .padding(horizontal = 32.dp),
                                     horizontalArrangement = Arrangement.SpaceEvenly
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Favorite,
+                                    Image(
+                                        painter = painterResource(id = R.drawable.like),
                                         contentDescription = "Like",
-                                        tint = Color.White
+                                        modifier = Modifier.size(60.dp)
                                     )
-                                    Icon(
-                                        imageVector = Icons.Filled.Star,
-                                        contentDescription = "Star",
-                                        tint = Color.White
+                                    Image(
+                                        painter = painterResource(id = R.drawable.save),
+                                        contentDescription = "Save",
+                                        modifier = Modifier.size(60.dp)
                                     )
-                                    Icon(
-                                        imageVector = Icons.Filled.Share,
+                                    Image(
+                                        painter = painterResource(id = R.drawable.hide),
+                                        contentDescription = "Hide",
+                                        modifier = Modifier.size(60.dp)
+                                    )
+                                    Image(
+                                        painter = painterResource(id = R.drawable.share),
                                         contentDescription = "Share",
-                                        tint = Color.White
+                                        modifier = Modifier.size(60.dp)
                                     )
-                                    Icon(
-                                        imageVector = Icons.Filled.MoreVert,
+                                    Image(
+                                        painter = painterResource(id = R.drawable.additional),
                                         contentDescription = "More options",
-                                        tint = Color.White
+                                        modifier = Modifier.size(50.dp)
                                     )
                                 }
                             }
