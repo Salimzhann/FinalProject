@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.screens
+package com.example.finalproject.ui.screens.homepage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,15 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale

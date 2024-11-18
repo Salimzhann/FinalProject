@@ -8,10 +8,14 @@ import com.example.finalproject.data.repository.api
 import com.example.finalproject.domain.model.ActorDetail
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ImageItem
+import com.example.finalproject.domain.model.MainIntent
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.MovieResponse
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.domain.model.StaffMember
+import com.example.finalproject.domain.model.UiState
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback

@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.screens
+package com.example.finalproject.ui.screens.homepage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +32,7 @@ import com.example.finalproject.ui.viewmodel.MainPageViewModel
 import com.example.finalproject.R
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.ScreenState
+
 @Composable
 fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
     val screenStatePremieres by viewModel.screenStatePremieres.observeAsState(ScreenState.Initial)

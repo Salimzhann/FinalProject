@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.screens
+package com.example.finalproject.ui.screens.homepage
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.finalproject.domain.model.FilmBrief
 import com.example.finalproject.domain.model.MovieItem
 
 @Composable

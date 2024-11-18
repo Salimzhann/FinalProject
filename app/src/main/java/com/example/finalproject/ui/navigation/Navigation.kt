@@ -21,20 +21,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.finalproject.domain.model.Icons
 import com.example.finalproject.domain.model.ScreenState
-import com.example.finalproject.ui.screens.ActorDetailScreen
-import com.example.finalproject.ui.screens.AllMoviesView
-import com.example.finalproject.ui.screens.FilmographyItem
-import com.example.finalproject.ui.screens.FilmographyScreen
-import com.example.finalproject.ui.screens.GalleryScreen
-import com.example.finalproject.ui.screens.MovieDetailScreen
-import com.example.finalproject.ui.screens.ProfileScreen
-import com.example.finalproject.ui.screens.SearchScreen
-import com.example.finalproject.ui.screens.SetupUI
+import com.example.finalproject.ui.screens.homepage.ActorDetailScreen
+import com.example.finalproject.ui.screens.homepage.AllMoviesView
+import com.example.finalproject.ui.screens.homepage.FilmographyScreen
+import com.example.finalproject.ui.screens.homepage.GalleryScreen
+import com.example.finalproject.ui.screens.homepage.MovieDetailScreen
+import com.example.finalproject.ui.screens.profilepage.ProfileScreen
+import com.example.finalproject.ui.screens.searchpage.SearchScreen
+import com.example.finalproject.ui.screens.homepage.SetupUI
 
 @Composable
 fun MainScreen() {

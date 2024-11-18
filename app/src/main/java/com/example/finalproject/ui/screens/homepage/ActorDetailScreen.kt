@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.screens
+package com.example.finalproject.ui.screens.homepage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

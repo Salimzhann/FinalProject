@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.screens
+package com.example.finalproject.ui.screens.profilepage
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
