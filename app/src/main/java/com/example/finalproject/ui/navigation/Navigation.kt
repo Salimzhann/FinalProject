@@ -31,8 +31,12 @@ import com.example.finalproject.ui.screens.homepage.FilmographyScreen
 import com.example.finalproject.ui.screens.homepage.GalleryScreen
 import com.example.finalproject.ui.screens.homepage.MovieDetailScreen
 import com.example.finalproject.ui.screens.profilepage.ProfileScreen
-import com.example.finalproject.ui.screens.searchpage.SearchScreen
 import com.example.finalproject.ui.screens.homepage.SetupUI
+import com.example.finalproject.ui.screens.searchpage.CountrySelectionPage
+import com.example.finalproject.ui.screens.searchpage.FilterPage
+import com.example.finalproject.ui.screens.searchpage.GenreSelectionPage
+import com.example.finalproject.ui.screens.searchpage.SearchPage
+import com.example.finalproject.ui.screens.searchpage.YearSelectionPage
 
 @Composable
 fun MainScreen() {
@@ -49,8 +53,12 @@ fun MainScreen() {
                 SetupUI(viewModel = viewModel, navController = navController)
             }
             composable("search") {
-                SearchScreen()
+                SearchPage(navController = navController)
             }
+            composable("filter") { FilterPage(navController = navController) }
+            composable("country") { CountrySelectionPage(navController) }
+            composable("genre") { GenreSelectionPage(navController) }
+            composable("year") { YearSelectionPage(navController) }
             composable("profile") {
                 ProfileScreen()
             }
