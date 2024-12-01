@@ -29,3 +29,25 @@ data class MovieResponse(
     val searchFilmsCountResult: Int,
     val films: List<Film>
 )
+
+data class MoviesResponse(
+    val total: Int,
+    val totalPages: Int,
+    val items: List<Movie>
+)
+
+data class Movie(
+    val kinopoiskId: Int,
+    val imdbId: String?,
+    val nameRu: String?,
+    val nameEn: String?,
+    val nameOriginal: String?,
+    val countries: List<Country>,
+    val genres: List<Genre>,
+    val ratingKinopoisk: Double?,
+    val ratingImdb: Double?,
+    val year: Int?,
+    val type: String?,
+    val posterUrl: String?,
+    val posterUrlPreview: String?
+)

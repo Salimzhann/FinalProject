@@ -5,6 +5,8 @@ import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.FilmImagesResponse
 import com.example.finalproject.domain.model.MovieResponse
 import com.example.finalproject.domain.model.StaffMember
+import com.example.finalproject.domain.model.filter.FiltersResponse
+import com.example.finalproject.domain.model.search.MoviesResponse
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Response
@@ -50,4 +52,19 @@ interface FilmRepository {
         @Query("keyword") keyword: String,
         @Query("page") page: Int = 1
     ): Response<com.example.finalproject.domain.model.search.MovieResponse>
+    @GET("/api/v2.2/films/filters")
+    suspend fun getFilters(): Response<FiltersResponse>
+    @GET("/api/v2.2/films")
+    suspend fun getFilteredMovies(
+        @Query("countries") countries: List<Int>?, // Исправлено на List<Int>
+        @Query("genres") genres: List<Int>?, // Исправлено на List<Int>
+        @Query("yearFrom") yearFrom: Int = 1000,
+        @Query("yearTo") yearTo: Int = 3000,
+        @Query("ratingFrom") ratingFrom: Float = 0f,
+        @Query("ratingTo") ratingTo: Float = 10f,
+        @Query("order") order: String = "RATING",
+        @Query("type") type: String = "ALL",
+        @Query("page") page: Int = 1
+    ): Response<MoviesResponse>
+
 }

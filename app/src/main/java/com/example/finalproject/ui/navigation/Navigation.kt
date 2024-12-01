@@ -57,10 +57,10 @@ fun MainScreen() {
             composable("search") {
                 SearchPage(navController = navController, viewModel = searchViewModel)
             }
-            composable("filter") { FilterPage(navController = navController) }
-            composable("country") { CountrySelectionPage(navController) }
-            composable("genre") { GenreSelectionPage(navController) }
-            composable("year") { YearSelectionPage(navController) }
+            composable("filter") { FilterPage(navController = navController, viewModel = searchViewModel) }
+            composable("country") { CountrySelectionPage(navController = navController, viewModel = searchViewModel) }
+            composable("genre") { GenreSelectionPage(navController = navController, viewModel = searchViewModel) }
+            composable("year") { YearSelectionPage(navController = navController, viewModel = searchViewModel) }
             composable("profile") {
                 ProfileScreen(viewModel = viewModel)
             }
