@@ -60,7 +60,7 @@ fun MainScreen() {
             composable("genre") { GenreSelectionPage(navController) }
             composable("year") { YearSelectionPage(navController) }
             composable("profile") {
-                ProfileScreen()
+                ProfileScreen(viewModel = viewModel)
             }
             composable("allMovies/{category}") { backStackEntry ->
                 val category = backStackEntry.arguments?.getString("category")

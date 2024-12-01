@@ -72,7 +72,8 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
                     "ТОП 250 ФИЛЬМОВ",
                     viewModel.getLimitedMovies((screenStatePremieres as ScreenState.Success).data),
                     navController,
-                    "ТОП 250 ФИЛЬМОВ"
+                    "ТОП 250 ФИЛЬМОВ",
+                    viewModel = viewModel
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -82,7 +83,8 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
                     "Популярное",
                     viewModel.getLimitedMovies((screenStatePopular as ScreenState.Success).data),
                     navController,
-                    "Популярное"
+                    "Популярное",
+                    viewModel = viewModel
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -92,7 +94,8 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
                     "ТОП 250 СЕРИАЛОВ",
                     viewModel.getLimitedMovies((screenStateSeries as ScreenState.Success).data),
                     navController,
-                    "ТОП 250 СЕРИАЛОВ"
+                    "ТОП 250 СЕРИАЛОВ",
+                    viewModel = viewModel
                 )
             }
         }
@@ -115,7 +118,7 @@ fun SetupUI(viewModel: MainPageViewModel, navController: NavController) {
 }
 
 @Composable
-fun MovieSection(title: String, movies: List<MovieItem>, navController: NavController, category: String) {
+fun MovieSection(title: String, movies: List<MovieItem>, navController: NavController, category: String, viewModel: MainPageViewModel) {
     Column(modifier = Modifier.height(270.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
@@ -139,6 +142,7 @@ fun MovieSection(title: String, movies: List<MovieItem>, navController: NavContr
         LazyRow(contentPadding = PaddingValues(start = 10.dp)) {
             items(movies.size) { index ->
                 MovieItemView(movie = movies[index]) {
+                    viewModel.addToWatchedMovies(movies[index])
                     navController.navigate("movieDetail/${movies[index].kinopoiskId}")
                 }
             }

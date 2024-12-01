@@ -1,6 +1,7 @@
 package com.example.finalproject.ui.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -144,5 +145,20 @@ class MainPageViewModel : ViewModel() {
                 isLoadingImages.value = false
             }
         }
+    }
+
+    private val _watchedMovies = MutableLiveData<List<MovieItem>>(emptyList())
+    val watchedMovies: LiveData<List<MovieItem>> get() = _watchedMovies
+
+    fun addToWatchedMovies(movie: MovieItem) {
+        _watchedMovies.value = _watchedMovies.value.orEmpty() + movie
+    }
+
+    fun removeFromWatchedMovies(movie: MovieItem) {
+        _watchedMovies.value = _watchedMovies.value?.filterNot { it.kinopoiskId == movie.kinopoiskId }
+    }
+
+    fun clearWatchedMovies() {
+        _watchedMovies.value = emptyList()
     }
 }
