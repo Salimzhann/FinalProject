@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.screens.searchpage
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,13 +20,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +38,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -44,35 +47,40 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.finalproject.domain.model.ScreenState
+import com.example.finalproject.domain.model.search.Film
+import com.example.finalproject.ui.viewmodel.SearchViewModel
 
 @Composable
-fun SearchPage(navController: NavController) {
-    // Состояние для текста в поисковом поле
+fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
     var searchText by remember { mutableStateOf("") }
+    val screenState by viewModel.screenStateSearch.observeAsState(ScreenState.Initial)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Верхняя часть страницы с TextField и иконкой
+        // Верхняя часть страницы с TextField
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // TextField для ввода ключевого слова
             TextField(
                 value = searchText,
-                onValueChange = { searchText = it },
+                onValueChange = {
+                    searchText = it
+                    viewModel.onSearchQueryChanged(it) // Обновляем состояние текста в ViewModel
+                },
                 label = { Text("Search movies") },
                 modifier = Modifier.weight(1f)
             )
 
-            // Иконка для перехода на Filter Page
+
+
             IconButton(
                 onClick = { navController.navigate("filter") }
             ) {
@@ -80,9 +88,60 @@ fun SearchPage(navController: NavController) {
             }
         }
 
-        // Пока что ничего не выводим, это будет добавлено после реализации поиска
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Отображение состояния экрана
+        when (screenState) {
+            is ScreenState.Initial -> {
+                Text("Введите ключевые слова для поиска")
+            }
+            is ScreenState.Loading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+            is ScreenState.Success -> {
+                val films = (screenState as ScreenState.Success<List<Film>>).data
+                if (films.isEmpty()) {
+                    Text("Ничего не найдено", modifier = Modifier.align(Alignment.CenterHorizontally))
+                } else {
+                    LazyColumn {
+                        items(films) { film ->
+                            FilmItem(film)
+                        }
+                    }
+                }
+            }
+            is ScreenState.Error -> {
+                Text(
+                    text = (screenState as ScreenState.Error).message,
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+        }
     }
 }
+
+@Composable
+fun FilmItem(film: Film) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(film.posterUrlPreview),
+            contentDescription = null,
+            modifier = Modifier.size(80.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Column {
+            Text(film.nameRu ?: film.nameEn ?: "Без названия", style = MaterialTheme.typography.bodyLarge)
+            Text("Год: ${film.year}", style = MaterialTheme.typography.bodyMedium)
+            Text(film.description ?: "", style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
 
 @Composable
 fun FilterPage(navController: NavController) {
@@ -243,16 +302,6 @@ fun SortingButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearchPage() {
-    val navController = rememberNavController() // Мок NavController для Preview
-    SearchPage(navController = navController)
-}
-
-
 @Composable
 fun RangeSlider(
     modifier: Modifier = Modifier,  // Модификатор
@@ -411,15 +460,13 @@ fun GenreListItem(genre: String, selectedGenre: String, onClick: () -> Unit) {
         HorizontalDivider(color = Color.Gray)
     }
 }
-
 @Composable
 fun YearSelectionPage(navController: NavController) {
     val years = (1900..2024).toList() // Пример списка годов
-    var startYear by remember { mutableIntStateOf(1900) }
-    var endYear by remember { mutableIntStateOf(2024) }
-    var currentCardIndex by remember { mutableIntStateOf(0) }
-
-    // Разбиваем список на 3 карточки, по 4 года в каждой
+    var startYear by remember { mutableStateOf<Int?>(null) }
+    var endYear by remember { mutableStateOf<Int?>(null) }
+    var startYearCardIndex by remember { mutableIntStateOf(0) }
+    var endYearCardIndex by remember { mutableIntStateOf(0) }
     val yearsInCards = years.chunked(12)
 
     Column(
@@ -427,125 +474,79 @@ fun YearSelectionPage(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Заголовок с кнопкой назад
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Период", style = MaterialTheme.typography.bodyLarge)
+        TopAppBar(
+            title = { Text("Выбор периода") },
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                }
+            },
+            backgroundColor = Color.Transparent,
+            elevation = 0.dp
+        )
+
+        Text("Искать в период с", color = Color.Gray, modifier = Modifier.padding(8.dp))
+        YearSelector(startYear, yearsInCards, startYearCardIndex, {
+            startYearCardIndex = it
+        }) { selectedYear ->
+            startYear = selectedYear
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Текст "Искать в период с"
-        Text(text = "Искать в период с", color = Color.Gray)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Карточка для "Искать в период с"
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // Кнопки для переключения карточек
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(onClick = { if (currentCardIndex > 0) currentCardIndex-- }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-                IconButton(onClick = { if (currentCardIndex < yearsInCards.size - 1) currentCardIndex++ }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
-                }
-            }
-
-            // Отображаем годы в текущем карточке (4 на 3)
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4), // 4 колонки
-                modifier = Modifier.padding(16.dp)
-            ) {
-                items(yearsInCards[currentCardIndex]) { year ->
-                    Box(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .size(60.dp)
-                            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-                            .clickable {
-                                startYear = year // Обновляем startYear при клике
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = year.toString())
-                    }
-                }
-            }
+        Text("Искать в период до", color = Color.Gray, modifier = Modifier.padding(8.dp))
+        YearSelector(endYear, yearsInCards, endYearCardIndex, {
+            endYearCardIndex = it
+        }) { selectedYear ->
+            endYear = selectedYear
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Текст "Искать в период до"
-        Text(text = "Искать в период до", color = Color.Gray)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Карточка для "Искать в период до"
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // Кнопки для переключения карточек
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(onClick = { if (currentCardIndex > 0) currentCardIndex-- }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-                IconButton(onClick = { if (currentCardIndex < yearsInCards.size - 1) currentCardIndex++ }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
-                }
-            }
-
-            // Отображаем годы в текущем карточке (4 на 3)
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4), // 4 колонки
-                modifier = Modifier.padding(16.dp)
-            ) {
-                items(yearsInCards[currentCardIndex]) { year ->
-                    Box(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .size(60.dp)
-                            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-                            .clickable {
-                                endYear = year // Обновляем endYear при клике
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = year.toString())
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Кнопка "Выбрать"
         Button(
             onClick = {
-                // Обработать выбранный диапазон лет
+                println("Выбран период с $startYear по $endYear")
                 navController.popBackStack()
             },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(contentColor = Color.Blue)
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
         ) {
-            Text(text = "Выбрать", color = Color.White)
+            Text("Выбрать")
         }
     }
 }
 
+@Composable
+fun YearSelector(
+    selectedYear: Int?,
+    yearsInCards: List<List<Int>>,
+    cardIndex: Int,
+    onCardChange: (Int) -> Unit,
+    onYearSelected: (Int) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(onClick = { if (cardIndex > 0) onCardChange(cardIndex - 1) }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+            }
+            IconButton(onClick = { if (cardIndex < yearsInCards.size - 1) onCardChange(cardIndex + 1) }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Вперед")
+            }
+        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            modifier = Modifier.padding(8.dp)
+        ) {
+            items(yearsInCards[cardIndex]) { year ->
+                Box(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(48.dp)
+                        .background(if (year == selectedYear) Color.Cyan else Color.LightGray, shape = RoundedCornerShape(8.dp))
+                        .clickable { onYearSelected(year) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(year.toString(), style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+        }
+    }
+}

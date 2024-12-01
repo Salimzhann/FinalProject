@@ -20,7 +20,7 @@ private val retrofit = Retrofit.Builder()
     .client(
         OkHttpClient.Builder().addInterceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader("X-API-KEY", "b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f")
+                .addHeader("X-API-KEY", "116b74c8-d1ec-4c61-94d1-bc4dcf100f70")
                 .build()
             chain.proceed(request)
         }.build()
@@ -28,7 +28,7 @@ private val retrofit = Retrofit.Builder()
     .build()
 //b05ecff3-58c8-469e-ac81-bfa3c0ee6f1f    ||    e82baed2-914f-4384-999a-a71af825d6bd || beb20069-75af-4b17-8c30-5ea3932df8b5
 //116b74c8-d1ec-4c61-94d1-bc4dcf100f70
-val api = retrofit.create(FilmRepository::class.java)
+val api: FilmRepository = retrofit.create(FilmRepository::class.java)
 
 interface FilmRepository {
     @GET("api/v2.2/films/collections")
@@ -45,4 +45,9 @@ interface FilmRepository {
         @Query("type") type: String? = null,
         @Query("page") page: Int? = 1
     ): Response<FilmImagesResponse>
+    @GET("/api/v2.1/films/search-by-keyword")
+    suspend fun searchMovies(
+        @Query("keyword") keyword: String,
+        @Query("page") page: Int = 1
+    ): Response<com.example.finalproject.domain.model.search.MovieResponse>
 }

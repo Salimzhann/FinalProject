@@ -37,11 +37,13 @@ import com.example.finalproject.ui.screens.searchpage.FilterPage
 import com.example.finalproject.ui.screens.searchpage.GenreSelectionPage
 import com.example.finalproject.ui.screens.searchpage.SearchPage
 import com.example.finalproject.ui.screens.searchpage.YearSelectionPage
+import com.example.finalproject.ui.viewmodel.SearchViewModel
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     val viewModel: MainPageViewModel = viewModel()
+    val searchViewModel : SearchViewModel = viewModel()
 
     Scaffold(
         bottomBar = {
@@ -53,7 +55,7 @@ fun MainScreen() {
                 SetupUI(viewModel = viewModel, navController = navController)
             }
             composable("search") {
-                SearchPage(navController = navController)
+                SearchPage(navController = navController, viewModel = searchViewModel)
             }
             composable("filter") { FilterPage(navController = navController) }
             composable("country") { CountrySelectionPage(navController) }
