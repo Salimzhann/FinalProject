@@ -22,12 +22,12 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,7 +62,7 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Верхняя часть страницы с SearchBar
+        // Верхняя часть страницы с ограниченной высотой SearchBar
         SearchBar(
             expanded = true, // Можно сделать раскрывающимся, если потребуется
             onExpandedChange = { /* Handle expanded state */ },
@@ -79,38 +79,44 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
                         Icon(Icons.Filled.Search, contentDescription = "Search")
                     },
                     trailingIcon = {
-                        // Разделитель
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(1.dp)
-                                .padding(vertical = 8.dp),
-                            color = Color.Gray
-                        )
-                        // Иконка фильтра
-                        IconButton(onClick = { navController.navigate("filter") }) {
-                            Icon(Icons.Filled.FilterList, contentDescription = "Filter")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Вертикальный разделитель
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                                    .background(Color.Gray)
+                            )
+                            // Иконка фильтра
+                            IconButton(onClick = { navController.navigate("filter") }) {
+                                Icon(Icons.Filled.FilterList, contentDescription = "Filter")
+                            }
                         }
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp), // Высота для более аккуратного вида
+                        .fillMaxWidth(), // Высота для более аккуратного вида
                     shape = MaterialTheme.shapes.medium
                 )
             },
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.large, // Округлые края
-            tonalElevation = 4.dp,
-            shadowElevation = 2.dp,
+            colors = SearchBarDefaults.colors(
+                containerColor = Color.Transparent,
+                dividerColor = Color.Transparent
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(58.dp), // Ограничиваем высоту самого SearchBar (включая все элементы)
+            shape = RoundedCornerShape(36.dp), // Округлые края
             content = {}
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // Отображение состояния экрана
+        Spacer(modifier = Modifier.height(16.dp)) // Пробел после SearchBar
+
+        // Далее идут другие элементы, такие как отображение фильмов и состояний экрана
         when (screenState) {
-            is ScreenState.Initial -> {
-            }
+            is ScreenState.Initial -> {}
             is ScreenState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             }
@@ -134,7 +140,8 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
                 )
             }
         }
-        // Отображение фильмов
+
+        // Отображение фильмов после поиска
         when (filteredMoviesState) {
             is ScreenState.Initial -> {}
             is ScreenState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
