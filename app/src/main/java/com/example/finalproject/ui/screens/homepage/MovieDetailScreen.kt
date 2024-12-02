@@ -27,7 +27,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +53,7 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
     val staffMember by viewModel.staffMembers.observeAsState(emptyList())
     val gallery by viewModel.filmImages.observeAsState(emptyList())
+    var isHidden by remember { mutableStateOf(true) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (filmDetailState) {
@@ -129,31 +134,39 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                     Image(
                                         painter = painterResource(id = R.drawable.like),
                                         contentDescription = "Like",
-                                        modifier = Modifier.size(60.dp)
+                                        colorFilter = ColorFilter.tint(Color.White),
+                                        modifier = Modifier.size(30.dp)
                                     )
                                     Image(
-                                        painter = painterResource(id = R.drawable.save),
+                                        painter = painterResource(id = R.drawable.bookmarkoutlined),
                                         contentDescription = "Save",
-                                        modifier = Modifier.size(60.dp)
+                                        colorFilter = ColorFilter.tint(Color.White),
+                                        modifier = Modifier.size(30.dp)
                                     )
                                     Image(
-                                        painter = painterResource(id = R.drawable.hide),
-                                        contentDescription = "Hide",
+                                        painter = painterResource(id = if (isHidden) R.drawable.hide else R.drawable.unhide),
+                                        contentDescription = if (isHidden) "Hide" else "Unhide",
+                                        colorFilter = if (isHidden) ColorFilter.tint(Color.White) else ColorFilter.tint(Color.Blue),
                                         modifier = Modifier
-                                            .size(60.dp)
+                                            .size(30.dp) // This sets both width and height to 60.dp
                                             .clickable {
-                                                viewModel.addToWatchedMovies(filmDetail)
-                                            }
+                                                isHidden = !isHidden
+                                                if (!isHidden) {
+                                                    viewModel.addToWatchedMovies(filmDetail)
+                                                }
+                                            },// This makes the image fill the specified bounds, cropping if necessary
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.share),
                                         contentDescription = "Share",
-                                        modifier = Modifier.size(60.dp)
+                                        colorFilter = ColorFilter.tint(Color.White),
+                                        modifier = Modifier.size(30.dp)
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.additional),
                                         contentDescription = "More options",
-                                        modifier = Modifier.size(50.dp)
+                                        colorFilter = ColorFilter.tint(Color.White),
+                                        modifier = Modifier.size(30.dp)
                                     )
                                 }
                             }

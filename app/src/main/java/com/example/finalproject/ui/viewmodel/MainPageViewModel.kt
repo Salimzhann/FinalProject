@@ -154,10 +154,6 @@ class MainPageViewModel : ViewModel() {
         _watchedMovies.value = _watchedMovies.value.orEmpty() + movie
     }
 
-    fun removeFromWatchedMovies(movie: MovieItem) {
-        _watchedMovies.value = _watchedMovies.value?.filterNot { it.kinopoiskId == movie.kinopoiskId }
-    }
-
     fun clearWatchedMovies() {
         _watchedMovies.value = emptyList()
     }
