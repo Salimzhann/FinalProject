@@ -88,16 +88,18 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
                         .height(176.dp)
                         .background(Color.Transparent)
                         .clickable { viewModel.clearWatchedMovies() },
-                ) {Icon(
-                    Icons.Rounded.DeleteOutline,
-                    contentDescription = "Back",
-                    tint = Color(0xFF3D3BFF),
-                    modifier = Modifier
-                        .size(35.dp)
-                        .clip(shape = CircleShape)
-                        .background(Color.White)
-                        .padding(6.dp)
-                )
+                ) {
+
+                    Icon(
+                        Icons.Rounded.DeleteOutline,
+                        contentDescription = "Back",
+                        tint = Color(0xFF3D3BFF),
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clip(shape = CircleShape)
+                            .background(Color.White)
+                            .padding(6.dp)
+                    )
                     Text(
                         text = "Очистить\nисторию",
                         textAlign = TextAlign.Center,
@@ -215,7 +217,10 @@ fun CollectionCard(icon: Int = R.drawable.useroutlined, name: String) {
             }
         }
     }
-}@Composable
+}
+
+
+@Composable
 fun MovieItemView(movie: FilmDetail, onClick: () -> Unit) {
     Log.d("MOVIE_ITEM_VIEW", "Rendering movie: ${movie.nameOriginal}")
     Column(
