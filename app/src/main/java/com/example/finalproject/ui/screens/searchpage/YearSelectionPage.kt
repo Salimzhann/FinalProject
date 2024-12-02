@@ -42,8 +42,8 @@ fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) 
     val years = (1900..2024).toList()
     var startYear by remember { mutableStateOf<Int?>(null) }
     var endYear by remember { mutableStateOf<Int?>(null) }
-    var startYearCardIndex by remember { mutableIntStateOf(0) }
-    var endYearCardIndex by remember { mutableIntStateOf(0) }
+    var startYearCardIndex by remember { mutableIntStateOf(1000) }
+    var endYearCardIndex by remember { mutableIntStateOf(3000) }
     val yearsInCards = years.chunked(12)
 
     Column(

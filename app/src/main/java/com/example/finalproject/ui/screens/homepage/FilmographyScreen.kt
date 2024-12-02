@@ -79,7 +79,7 @@ fun FilmographyItem(film: FilmBrief) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "${film.description}",
+                text = film.description,
                 style = MaterialTheme.typography.body2,
                 color = Color.Gray
             )
