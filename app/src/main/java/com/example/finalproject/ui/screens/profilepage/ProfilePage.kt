@@ -12,7 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +33,6 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Title Section
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,56 +88,36 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
 fun MovieProfileCard(movie: MovieItem) {
     Column(
         modifier = Modifier
-            .width(120.dp)
-            .padding(8.dp)
+            .width(111.dp)
+            .padding(4.dp)
     ) {
-        Box(
+        Image(
+            painter = rememberAsyncImagePainter(model = movie.posterUrl),
+            contentDescription = "Movie Poster",
             modifier = Modifier
-                .height(150.dp)
-                .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                .height(156.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Column(
+            modifier = Modifier
+                .padding(top = 0.dp, start = 4.dp, end = 4.dp)
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(model = movie.posterUrl),
-                contentDescription = "Movie Poster",
-                modifier = Modifier.fillMaxSize()
+            Text(
+                text = movie.nameRu ?: movie.nameOriginal,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                fontSize = 12.sp,
+                maxLines = 2,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-                    .background(Color(0xFF3D3BFF), shape = RoundedCornerShape(50))
-                    .padding(horizontal = 6.dp, vertical = 3.dp)
-            ) {
-                Text(
-                    text = movie.ratingKinopoisk?.toString() ?: "N/A",
-                    color = Color.White,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Text(
+                text = movie.genres.joinToString { it.genre },
+                fontSize = 10.sp,
+                color = Color.Gray,
+                maxLines = 1
+            )
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = movie.nameRu ?: movie.nameOriginal ?: "Untitled",
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-            maxLines = 2,
-            modifier = Modifier.padding(horizontal = 4.dp)
-        )
-
-        Text(
-            text = movie.genres.joinToString { it.genre },
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray,
-            maxLines = 1,
-            modifier = Modifier.padding(horizontal = 4.dp)
-        )
     }
 }
-
-
-
-
