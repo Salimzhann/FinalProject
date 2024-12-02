@@ -2,6 +2,7 @@ package com.example.finalproject.ui.screens.homepage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -138,7 +139,11 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                     Image(
                                         painter = painterResource(id = R.drawable.hide),
                                         contentDescription = "Hide",
-                                        modifier = Modifier.size(60.dp)
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .clickable {
+                                                viewModel.addToWatchedMovies(filmDetail)
+                                            }
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.share),

@@ -147,10 +147,10 @@ class MainPageViewModel : ViewModel() {
         }
     }
 
-    private val _watchedMovies = MutableLiveData<List<MovieItem>>(emptyList())
-    val watchedMovies: LiveData<List<MovieItem>> get() = _watchedMovies
+    private val _watchedMovies = MutableLiveData<List<FilmDetail>>(emptyList())
+    val watchedMovies: LiveData<List<FilmDetail>> get() = _watchedMovies
 
-    fun addToWatchedMovies(movie: MovieItem) {
+    fun addToWatchedMovies(movie: FilmDetail) {
         _watchedMovies.value = _watchedMovies.value.orEmpty() + movie
     }
 
