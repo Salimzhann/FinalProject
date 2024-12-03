@@ -15,14 +15,10 @@ import com.example.finalproject.data.repository.api
 import com.example.finalproject.domain.model.ActorDetail
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ImageItem
-import com.example.finalproject.domain.model.MainIntent
 import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.domain.model.MovieResponse
 import com.example.finalproject.domain.model.ScreenState
 import com.example.finalproject.domain.model.StaffMember
-import com.example.finalproject.domain.model.UiState
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -165,7 +161,7 @@ class MainPageViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
-    // Add to collection
+
     fun addToCollection(filmDetail: FilmDetail, collectionType: String) {
         viewModelScope.launch {
             val filmEntity = filmDetail.toFilmEntity(collectionType)
@@ -173,21 +169,18 @@ class MainPageViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // Remove from collection
     fun removeFromCollection(filmId: Long, collectionType: String) {
         viewModelScope.launch {
             filmDao.deleteFilm(filmId, collectionType)
         }
     }
 
-    // Clear collection
     fun clearCollection(collectionType: String) {
         viewModelScope.launch {
             filmDao.clearCollection(collectionType)
         }
     }
 
-    // Extension function to convert FilmDetail to FilmEntity
     private fun FilmDetail.toFilmEntity(collectionType: String): FilmEntity {
         return FilmEntity(
             kinopoiskId = this.kinopoiskId,
@@ -199,15 +192,4 @@ class MainPageViewModel(application: Application) : AndroidViewModel(application
             collectionType = collectionType
         )
     }
-
-
-//    private val _watchedMovies = MutableLiveData<List<FilmDetail>>(emptyList())
-
-//    fun addToWatchedMovies(movie: FilmDetail) {
-//        _watchedMovies.value = _watchedMovies.value.orEmpty() + movie
-//    }
-//
-//    fun clearWatchedMovies() {
-//        _watchedMovies.value = emptyList()
-//    }
 }

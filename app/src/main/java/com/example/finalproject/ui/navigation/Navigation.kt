@@ -32,6 +32,7 @@ import com.example.finalproject.ui.screens.homepage.GalleryScreen
 import com.example.finalproject.ui.screens.homepage.MovieDetailScreen
 import com.example.finalproject.ui.screens.profilepage.ProfileScreen
 import com.example.finalproject.ui.screens.homepage.SetupUI
+import com.example.finalproject.ui.screens.profilepage.CollectionScreen
 import com.example.finalproject.ui.screens.searchpage.CountrySelectionPage
 import com.example.finalproject.ui.screens.searchpage.FilterPage
 import com.example.finalproject.ui.screens.searchpage.GenreSelectionPage
@@ -61,9 +62,7 @@ fun MainScreen() {
             composable("country") { CountrySelectionPage(navController = navController, viewModel = searchViewModel) }
             composable("genre") { GenreSelectionPage(navController = navController, viewModel = searchViewModel) }
             composable("year") { YearSelectionPage(navController = navController, viewModel = searchViewModel) }
-            composable("profile") {
-                ProfileScreen(viewModel = viewModel)
-            }
+            composable("profile") { ProfileScreen(navController = navController) }
             composable("allMovies/{category}") { backStackEntry ->
                 val category = backStackEntry.arguments?.getString("category")
 
@@ -110,7 +109,10 @@ fun MainScreen() {
                     Text("Invalid Actor ID")
                 }
             }
-
+            composable("collectionScreen/{collectionType}") { backStackEntry ->
+                val collectionType = backStackEntry.arguments?.getString("collectionType") ?: ""
+                CollectionScreen(collectionType, viewModel, navController)
+            }
         }
     }
 }

@@ -22,46 +22,42 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.finalproject.R
 import com.example.finalproject.data.local.FilmEntity
 import com.example.finalproject.domain.model.FilmDetail
-import com.example.finalproject.domain.model.ImageItem
-import com.example.finalproject.domain.model.MovieItem
 import com.example.finalproject.helper.toFilmDetail
-import com.example.finalproject.ui.screens.homepage.MovieItemView
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
 import com.example.finalproject.ui.viewmodel.MainPageViewModelFactory
 
 @Composable
-fun ProfileScreen(viewModel: MainPageViewModel) {
+fun ProfileScreen(navController: NavController) {
     val viewModel: MainPageViewModel = viewModel(
         factory = MainPageViewModelFactory(LocalContext.current.applicationContext as Application)
     )
 
     val watchedMovies by viewModel.watchedMovies.observeAsState(emptyList())
+    val likedMovies by viewModel.likedMovies.observeAsState(emptyList())
+    val bookmarkedMovies by viewModel.bookmarkedMovies.observeAsState(emptyList())
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Title Section
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -162,27 +158,40 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                CollectionCard(icon = R.drawable.heartoutlined, name = "Любимые")
+                CollectionCard(
+                    icon = R.drawable.heartoutlined,
+                    name = "Любимые",
+                    count = likedMovies.size,
+                    onClick = {
+                        navController.navigate("collectionScreen/liked")
+                    })
             }
 
             item {
-                CollectionCard(icon = R.drawable.bookmarkoutlined, name = "Хочу посмотреть")
+                CollectionCard(
+                    icon = R.drawable.bookmarkoutlined,
+                    name = "Хочу посмотреть",
+                    count = bookmarkedMovies.size,
+                    onClick = {
+                        navController.navigate("collectionScreen/bookmarked")
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun CollectionCard(icon: Int = R.drawable.useroutlined, name: String) {
+fun CollectionCard(icon: Int, name: String, count: Int, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
             .border(1.dp, color = Color.Black, shape = RoundedCornerShape(30.dp))
             .clip(RoundedCornerShape(10.dp))
-            .background(Color.White),
+            .background(Color.White)
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
-//            .clickable(onClick = onClick)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -207,7 +216,7 @@ fun CollectionCard(icon: Int = R.drawable.useroutlined, name: String) {
                     .padding(horizontal = 6.dp, vertical = 3.dp)
             ) {
                 Text(
-                    text = "105",
+                    text = count.toString(),
                     color = Color.White,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
@@ -271,5 +280,55 @@ fun MovieItemView(movie: FilmDetail, onClick: () -> Unit) {
             fontSize = 12.sp,
             fontWeight = FontWeight.W400
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CollectionScreen(collectionType: String, viewModel: MainPageViewModel, navController: NavController) {
+    val movies: List<FilmEntity> by when (collectionType) {
+        "liked" -> viewModel.likedMovies.observeAsState(emptyList())
+        "bookmarked" -> viewModel.bookmarkedMovies.observeAsState(emptyList())
+        else -> mutableStateOf(emptyList())
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = when (collectionType) {
+                            "liked" -> "Любимые"
+                            "bookmarked" -> "Хочу посмотреть"
+                            else -> collectionType
+                        }
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                top = paddingValues.calculateTopPadding() + 8.dp,
+                end = 16.dp,
+                bottom = paddingValues.calculateBottomPadding() + 8.dp
+            ),
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(movies) { movieEntity ->
+                MovieItemView(movieEntity.toFilmDetail()) {
+                    navController.navigate("movieDetail/${movieEntity.kinopoiskId}")
+                }
+            }
+        }
     }
 }
