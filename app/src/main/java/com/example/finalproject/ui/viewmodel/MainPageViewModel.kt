@@ -1,10 +1,16 @@
 package com.example.finalproject.ui.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.finalproject.data.local.AppDatabase
+import com.example.finalproject.data.local.FilmDao
+import com.example.finalproject.data.local.FilmEntity
 import com.example.finalproject.data.repository.api
 import com.example.finalproject.domain.model.ActorDetail
 import com.example.finalproject.domain.model.FilmDetail
@@ -22,7 +28,17 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainPageViewModel : ViewModel() {
+class MainPageViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainPageViewModel::class.java)) {
+            return MainPageViewModel(application) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class MainPageViewModel(application: Application) : AndroidViewModel(application) {
+    private val filmDao: FilmDao = AppDatabase.getDatabase(application).filmDao()
 
     val screenStatePremieres = MutableLiveData<ScreenState<List<MovieItem>>>(ScreenState.Initial)
     val screenStatePopular = MutableLiveData<ScreenState<List<MovieItem>>>(ScreenState.Initial)
@@ -33,6 +49,9 @@ class MainPageViewModel : ViewModel() {
     val isLoadingImages = MutableLiveData(false)
     val actorDetails = MutableLiveData<ActorDetail>(null)
     val allDataLoaded = MutableLiveData<Boolean>(false)
+    val watchedMovies: LiveData<List<FilmEntity>> = filmDao.getFilmsByCollection("watched")
+    val likedMovies: LiveData<List<FilmEntity>> = filmDao.getFilmsByCollection("liked")
+    val bookmarkedMovies: LiveData<List<FilmEntity>> = filmDao.getFilmsByCollection("bookmarked")
 
     init {
         loadMovies()
@@ -146,15 +165,49 @@ class MainPageViewModel : ViewModel() {
             }
         }
     }
-
-    private val _watchedMovies = MutableLiveData<List<FilmDetail>>(emptyList())
-    val watchedMovies: LiveData<List<FilmDetail>> get() = _watchedMovies
-
-    fun addToWatchedMovies(movie: FilmDetail) {
-        _watchedMovies.value = _watchedMovies.value.orEmpty() + movie
+    // Add to collection
+    fun addToCollection(filmDetail: FilmDetail, collectionType: String) {
+        viewModelScope.launch {
+            val filmEntity = filmDetail.toFilmEntity(collectionType)
+            filmDao.insertFilm(filmEntity)
+        }
     }
 
-    fun clearWatchedMovies() {
-        _watchedMovies.value = emptyList()
+    // Remove from collection
+    fun removeFromCollection(filmId: Long, collectionType: String) {
+        viewModelScope.launch {
+            filmDao.deleteFilm(filmId, collectionType)
+        }
     }
+
+    // Clear collection
+    fun clearCollection(collectionType: String) {
+        viewModelScope.launch {
+            filmDao.clearCollection(collectionType)
+        }
+    }
+
+    // Extension function to convert FilmDetail to FilmEntity
+    private fun FilmDetail.toFilmEntity(collectionType: String): FilmEntity {
+        return FilmEntity(
+            kinopoiskId = this.kinopoiskId,
+            nameRu = this.nameRu,
+            nameOriginal = this.nameOriginal,
+            posterUrl = this.posterUrl,
+            ratingKinopoisk = this.ratingKinopoisk,
+            genres = this.genres,
+            collectionType = collectionType
+        )
+    }
+
+
+//    private val _watchedMovies = MutableLiveData<List<FilmDetail>>(emptyList())
+
+//    fun addToWatchedMovies(movie: FilmDetail) {
+//        _watchedMovies.value = _watchedMovies.value.orEmpty() + movie
+//    }
+//
+//    fun clearWatchedMovies() {
+//        _watchedMovies.value = emptyList()
+//    }
 }

@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.screens.profilepage
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,16 +36,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.finalproject.R
+import com.example.finalproject.data.local.FilmEntity
 import com.example.finalproject.domain.model.FilmDetail
 import com.example.finalproject.domain.model.ImageItem
 import com.example.finalproject.domain.model.MovieItem
+import com.example.finalproject.helper.toFilmDetail
 import com.example.finalproject.ui.screens.homepage.MovieItemView
 import com.example.finalproject.ui.viewmodel.MainPageViewModel
+import com.example.finalproject.ui.viewmodel.MainPageViewModelFactory
 
 @Composable
 fun ProfileScreen(viewModel: MainPageViewModel) {
+    val viewModel: MainPageViewModel = viewModel(
+        factory = MainPageViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
+
     val watchedMovies by viewModel.watchedMovies.observeAsState(emptyList())
 
     Column(
@@ -75,8 +86,8 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(watchedMovies.size) { index ->
-                MovieItemView (movie = watchedMovies[index]) {}
+            items(watchedMovies) { index ->
+                MovieItemView (movie = index.toFilmDetail()) {}
             }
 
             item {
@@ -87,7 +98,7 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
                         .width(111.dp)
                         .height(176.dp)
                         .background(Color.Transparent)
-                        .clickable { viewModel.clearWatchedMovies() },
+                        .clickable { viewModel.clearCollection("watched") }
                 ) {
 
                     Icon(
@@ -161,19 +172,6 @@ fun ProfileScreen(viewModel: MainPageViewModel) {
     }
 }
 
-
-//LazyVerticalGrid(
-//columns = GridCells.Adaptive(minSize = 120.dp),
-//contentPadding = PaddingValues(16.dp),
-//verticalArrangement = Arrangement.spacedBy(16.dp),
-//horizontalArrangement = Arrangement.spacedBy(16.dp),
-//modifier = Modifier.padding(paddingValues)
-//) {
-//    items(images) { image ->
-//        ImageCard(image)
-//    }
-//}
-
 @Composable
 fun CollectionCard(icon: Int = R.drawable.useroutlined, name: String) {
     Card(
@@ -226,7 +224,7 @@ fun MovieItemView(movie: FilmDetail, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .width(111.dp)
+            .width(104.dp)
             .height(230.dp)
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.Start
@@ -235,7 +233,8 @@ fun MovieItemView(movie: FilmDetail, onClick: () -> Unit) {
             Image(
                 painter = rememberAsyncImagePainter(model = movie.posterUrl),
                 contentDescription = "Movie Poster",
-                modifier = Modifier.size(111.dp, 156.dp)
+                modifier = Modifier.size(104.dp, 156.dp)
+                    .clip(RoundedCornerShape(8.dp))
             )
 
             Box(
@@ -268,7 +267,7 @@ fun MovieItemView(movie: FilmDetail, onClick: () -> Unit) {
         )
         Text(
             color = Color.Gray,
-            text = movie.genres.joinToString { it.genre },
+            text = movie.genres.take(2).joinToString { it.genre },
             fontSize = 12.sp,
             fontWeight = FontWeight.W400
         )
