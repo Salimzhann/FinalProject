@@ -45,11 +45,16 @@ import com.example.finalproject.ui.viewmodel.MainPageViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController: NavController) {
+    var isWatched by remember { mutableStateOf(false) }
 
-    LaunchedEffect(movieId) {
+    val watchedMovies by viewModel.watchedMovies.observeAsState(emptyList())
+
+    LaunchedEffect(movieId,watchedMovies) {
         viewModel.loadFilmDetailAndStaffById(movieId)
         viewModel.loadFilmImages(movieId)
+        isWatched = watchedMovies.any { it.kinopoiskId == movieId }
     }
+
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
     val staffMember by viewModel.staffMembers.observeAsState(emptyList())
     val gallery by viewModel.filmImages.observeAsState(emptyList())
@@ -144,17 +149,19 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                         modifier = Modifier.size(30.dp)
                                     )
                                     Image(
-                                        painter = painterResource(id = if (isHidden) R.drawable.hide else R.drawable.unhide),
-                                        contentDescription = if (isHidden) "Hide" else "Unhide",
-                                        colorFilter = if (isHidden) ColorFilter.tint(Color.White) else ColorFilter.tint(Color.Blue),
+                                        painter = painterResource(id = if (isWatched) R.drawable.unhide else R.drawable.hide),
+                                        contentDescription = if (isWatched) "Unhide" else "Hide",
+                                        colorFilter = if (isWatched) ColorFilter.tint(Color.Blue) else ColorFilter.tint(Color.White),
                                         modifier = Modifier
-                                            .size(30.dp) // This sets both width and height to 60.dp
+                                            .size(30.dp)
                                             .clickable {
-                                                isHidden = !isHidden
-                                                if (!isHidden) {
-                                                    viewModel.addToWatchedMovies(filmDetail)
+                                                isWatched = !isWatched
+                                                if (isWatched) {
+                                                    viewModel.addToCollection(filmDetail, "watched")
+                                                } else {
+                                                    viewModel.removeFromCollection(filmDetail.kinopoiskId, "watched")
                                                 }
-                                            },// This makes the image fill the specified bounds, cropping if necessary
+                                            }
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.share),

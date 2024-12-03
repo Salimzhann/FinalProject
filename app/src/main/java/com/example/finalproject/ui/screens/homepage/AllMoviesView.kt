@@ -57,7 +57,7 @@ fun AllMoviesView(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 60.dp)
+                .padding(horizontal = 65.dp)
         ) {
             items(movies.size) { index ->
                 MovieItemView(movie = movies[index]) {
