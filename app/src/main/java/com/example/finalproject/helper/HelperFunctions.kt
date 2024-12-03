@@ -2,9 +2,9 @@ package com.example.finalproject.helper
 
 import com.example.finalproject.data.local.FilmEntity
 import com.example.finalproject.domain.model.FilmDetail
+import com.example.finalproject.domain.model.MovieItem
 
 fun FilmEntity.toFilmDetail(): FilmDetail {
-    // You need to reconstruct FilmDetail from FilmEntity
     return FilmDetail(
         kinopoiskId = this.kinopoiskId,
         nameRu = this.nameRu,
@@ -12,7 +12,6 @@ fun FilmEntity.toFilmDetail(): FilmDetail {
         posterUrl = this.posterUrl ?: "",
         ratingKinopoisk = this.ratingKinopoisk,
         genres = this.genres,
-        // Provide default or empty values for the rest
         kinopoiskHDId = "",
         imdbId = "",
         nameEn = "",
@@ -52,5 +51,22 @@ fun FilmEntity.toFilmDetail(): FilmDetail {
         serial = false,
         shortFilm = false,
         completed = false
+    )
+}
+
+fun FilmEntity.toMovieItem(): MovieItem {
+    return MovieItem(
+        kinopoiskId = this.kinopoiskId,
+        nameRu = this.nameRu ?: null,
+        nameEn = null,
+        nameOriginal = this.nameOriginal ?: this.nameRu ?: "",
+        countries = emptyList(),
+        genres = this.genres,
+        ratingKinopoisk = this.ratingKinopoisk,
+        ratingImbd = null,
+        year = "",
+        type = "",
+        posterUrl = this.posterUrl ?: "",
+        posterUrlPreview = "",
     )
 }

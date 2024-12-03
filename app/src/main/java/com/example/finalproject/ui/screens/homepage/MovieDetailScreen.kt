@@ -46,19 +46,24 @@ import com.example.finalproject.ui.viewmodel.MainPageViewModel
 @Composable
 fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController: NavController) {
     var isWatched by remember { mutableStateOf(false) }
+    var isLiked by remember { mutableStateOf(false) }
+    var isBookmarked by remember { mutableStateOf(false) }
 
     val watchedMovies by viewModel.watchedMovies.observeAsState(emptyList())
+    val likedMovies by viewModel.likedMovies.observeAsState(emptyList())
+    val bookmarkedMovies by viewModel.bookmarkedMovies.observeAsState(emptyList())
 
-    LaunchedEffect(movieId,watchedMovies) {
+    LaunchedEffect(movieId, watchedMovies, likedMovies, bookmarkedMovies) {
         viewModel.loadFilmDetailAndStaffById(movieId)
         viewModel.loadFilmImages(movieId)
         isWatched = watchedMovies.any { it.kinopoiskId == movieId }
+        isLiked = likedMovies.any { it.kinopoiskId == movieId }
+        isBookmarked = bookmarkedMovies.any { it.kinopoiskId == movieId }
     }
 
     val filmDetailState by viewModel.screenStateFilmDetail.observeAsState(ScreenState.Initial)
     val staffMember by viewModel.staffMembers.observeAsState(emptyList())
     val gallery by viewModel.filmImages.observeAsState(emptyList())
-    var isHidden by remember { mutableStateOf(true) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (filmDetailState) {
@@ -139,14 +144,32 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                                     Image(
                                         painter = painterResource(id = R.drawable.like),
                                         contentDescription = "Like",
-                                        colorFilter = ColorFilter.tint(Color.White),
-                                        modifier = Modifier.size(30.dp)
+                                        colorFilter = if (isLiked) ColorFilter.tint(Color.Blue) else ColorFilter.tint(Color.White),
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .clickable {
+                                                isLiked = !isLiked
+                                                if (isLiked) {
+                                                    viewModel.addToCollection(filmDetail, "liked")
+                                                } else {
+                                                    viewModel.removeFromCollection(filmDetail.kinopoiskId, "liked")
+                                                }
+                                            }
                                     )
                                     Image(
                                         painter = painterResource(id = R.drawable.bookmarkoutlined),
                                         contentDescription = "Save",
-                                        colorFilter = ColorFilter.tint(Color.White),
-                                        modifier = Modifier.size(30.dp)
+                                        colorFilter = if (isBookmarked) ColorFilter.tint(Color.Blue) else ColorFilter.tint(Color.White),
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .clickable {
+                                                isBookmarked = !isBookmarked
+                                                if (isBookmarked) {
+                                                    viewModel.addToCollection(filmDetail, "bookmarked")
+                                                } else {
+                                                    viewModel.removeFromCollection(filmDetail.kinopoiskId, "bookmarked")
+                                                }
+                                            }
                                     )
                                     Image(
                                         painter = painterResource(id = if (isWatched) R.drawable.unhide else R.drawable.hide),
@@ -195,7 +218,7 @@ fun MovieDetailScreen(movieId: Long, viewModel: MainPageViewModel, navController
                             Spacer(modifier = Modifier.height(10.dp))
 
                             Text(
-                                text = filmDetail.description ?: "No description available.",
+                                text = filmDetail.description,
                                 style = MaterialTheme.typography.bodyMedium,
                                 lineHeight = 20.sp
                             )
