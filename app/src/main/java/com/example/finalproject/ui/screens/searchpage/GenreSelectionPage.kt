@@ -11,15 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +33,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -66,39 +69,46 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Back")
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Жанр", style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.width(120.dp))
+            Text(
+                text = "Жанр",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
+        TextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            label = { Text("Введите жанр") },
+            label = { Text("Введите жанр", color = Color.Gray) },
             leadingIcon = {
-                Icon(Icons.Default.Search, contentDescription = "Search")
+                Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Gray)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(36.dp),
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color(0x66B5B5C9), focusedIndicatorColor = Color.Transparent, unfocusedIndicatorColor = Color.Transparent)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             items(filteredGenres) { genre ->
                 GenreListItem(genre, selectedGenreId.value) {
-                    viewModel.updateSelectedGenre(genre.id, genre.genre) // Сохраняем ID и имя жанра
+                    viewModel.updateSelectedGenre(genre.id, genre.genre)
                     navController.popBackStack()
                 }
             }
@@ -108,18 +118,19 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
 
 @Composable
 fun GenreListItem(genre: Genre, selectedGenreId: Int?, onClick: () -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onClick() }
-                .padding(vertical = 12.dp),
+                .padding(16.dp)
+                .height(40.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = genre.genre,
                 modifier = Modifier.weight(1f),
-                style = if (selectedGenreId == genre.id) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyMedium
+                style = if (selectedGenreId == genre.id) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyLarge
             )
         }
         HorizontalDivider(color = Color.Gray)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
@@ -41,7 +41,7 @@ import com.example.finalproject.ui.viewmodel.SearchViewModel
 
 @Composable
 fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) {
-    val years = (1900..2024).toList()
+    val years = (1905..2024).toList()
     val yearsInCards = years.chunked(12)
     var startYear by remember { mutableStateOf<Int?>(null) }
     var endYear by remember { mutableStateOf<Int?>(null) }
@@ -55,12 +55,14 @@ fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) 
             .padding(16.dp)
     ) {
         TopAppBar(
-            title = { Text(
-                text = "Период",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 85.dp)
-            ) },
+            title = {
+                Text(
+                    text = "Период",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(start = 85.dp)
+                )
+            },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Назад")
@@ -118,47 +120,52 @@ fun YearSelector(
     onCardChange: (Int) -> Unit,
     onYearSelected: (Int) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = { if (cardIndex > 0) onCardChange(cardIndex - 1) },
-                enabled = cardIndex > 0
-            ) {
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Назад")
-            }
-            IconButton(
-                onClick = { if (cardIndex < yearsInCards.size - 1) onCardChange(cardIndex + 1) },
-                enabled = cardIndex < yearsInCards.size - 1
-            ) {
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Вперед")
-            }
-        }
-        val currentYears = yearsInCards[cardIndex]
-        val minYear = currentYears.minOrNull()
-        val maxYear = currentYears.maxOrNull()
-        val rangeText = if (minYear != null && maxYear != null) "$minYear - $maxYear" else ""
+    val currentYears = yearsInCards[cardIndex]
+    val minYear = currentYears.minOrNull()
+    val maxYear = currentYears.maxOrNull()
+    val rangeText = if (minYear != null && maxYear != null) "$minYear - $maxYear" else ""
 
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-        ) {
-            Text(
-                text = rangeText,
-                color = Color.Blue,
-                modifier = Modifier
-                    .padding(8.dp),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
+    Box(
+        modifier = Modifier
+            .padding(8.dp)
+            .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+    ) {
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = rangeText,
+                    color = Color.Blue,
+                    modifier = Modifier
+                        .padding(8.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.weight(1f))
+                IconButton(
+                    onClick = { if (cardIndex > 0) onCardChange(cardIndex - 1) },
+                    enabled = cardIndex > 0
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Назад")
+                }
+                IconButton(
+                    onClick = { if (cardIndex < yearsInCards.size - 1) onCardChange(cardIndex + 1) },
+                    enabled = cardIndex < yearsInCards.size - 1
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Вперед"
+                    )
+                }
+            }
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 modifier = Modifier
-                    .padding(top = 40.dp, start = 8.dp, end = 8.dp, bottom = 16.dp)
+                    .padding(top = 10.dp, start = 8.dp, end = 8.dp, bottom = 16.dp)
             ) {
                 items(currentYears) { year ->
                     Box(

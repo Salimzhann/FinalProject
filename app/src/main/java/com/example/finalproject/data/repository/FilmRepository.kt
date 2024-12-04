@@ -22,7 +22,7 @@ private val retrofit = Retrofit.Builder()
     .client(
         OkHttpClient.Builder().addInterceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader("X-API-KEY", "e82baed2-914f-4384-999a-a71af825d6bd")
+                .addHeader("X-API-KEY", "beb20069-75af-4b17-8c30-5ea3932df8b5")
                 .build()
             chain.proceed(request)
         }.build()

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,14 +20,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -49,7 +47,6 @@ import com.example.finalproject.domain.model.search.Film
 import com.example.finalproject.domain.model.search.Movie
 import com.example.finalproject.ui.viewmodel.SearchViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
     var searchText by remember { mutableStateOf("") }
@@ -62,49 +59,36 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        SearchBar(
-            expanded = true,
-            onExpandedChange = {},
-            inputField = {
-                OutlinedTextField(
-                    value = searchText,
-                    onValueChange = {
-                        searchText = it
-                        viewModel.onSearchQueryChanged(it)
-                    },
-                    placeholder = { Text("Фильмы, актёры, режиссёры") },
-                    leadingIcon = {
-                        Icon(Icons.Filled.Search, contentDescription = "Search")
-                    },
-                    trailingIcon = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(1.dp)
-                                    .background(Color.Gray)
-                            )
-                            IconButton(onClick = { navController.navigate("filter") }) {
-                                Icon(Icons.Filled.FilterList, contentDescription = "Filter")
-                            }
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium
-                )
+        TextField(
+            value = searchText,
+            onValueChange = {
+                searchText = it
+                viewModel.onSearchQueryChanged(it)
             },
-            colors = SearchBarDefaults.colors(
-                containerColor = Color.Transparent,
-                dividerColor = Color.Transparent
-            ),
+            label = { Text(
+                text = "Фильмы, актёры, режиссёры",
+                color = Color.Gray,
+                style = MaterialTheme.typography.bodyMedium
+            ) },
+            leadingIcon = {
+                Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color.Gray)
+            },
+            trailingIcon = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    VerticalDivider(color = Color.Gray, thickness = 1.dp)
+                    IconButton(onClick = { navController.navigate("filter") }) {
+                        Icon(Icons.Filled.FilterList, contentDescription = "Filter", tint = Color.Gray)
+                    }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(58.dp),
-            shape = RoundedCornerShape(36.dp),
-            content = {}
+                .height(90.dp)
+                .padding(16.dp),
+            shape = RoundedCornerShape(30.dp),
+            colors = TextFieldDefaults.colors(unfocusedContainerColor = Color(0x66B5B5C9), focusedIndicatorColor = Color.Transparent, unfocusedIndicatorColor = Color.Transparent)
         )
 
 
@@ -115,10 +99,14 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
             is ScreenState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             }
+
             is ScreenState.Success -> {
                 val films = (screenState as ScreenState.Success<List<Film>>).data
                 if (films.isEmpty()) {
-                    Text("Ничего не найдено", modifier = Modifier.align(Alignment.CenterHorizontally))
+                    Text(
+                        "Ничего не найдено",
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
                 } else {
                     LazyColumn {
                         items(films) { film ->
@@ -127,6 +115,7 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
                     }
                 }
             }
+
             is ScreenState.Error -> {
                 Text(
                     text = (screenState as ScreenState.Error).message,
@@ -147,6 +136,7 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
                     }
                 }
             }
+
             is ScreenState.Error -> {
                 Text(
                     text = (filteredMoviesState as ScreenState.Error).message,
