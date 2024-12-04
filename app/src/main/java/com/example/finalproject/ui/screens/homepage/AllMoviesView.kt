@@ -46,7 +46,6 @@ fun AllMoviesView(
                             textAlign = TextAlign.Center
                         )
                     }
-
                 }
             )
         }
