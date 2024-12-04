@@ -36,16 +36,14 @@ import com.example.finalproject.ui.viewmodel.SearchViewModel
 
 @Composable
 fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
-    // Получаем данные из ViewModel
-    val selectedCountryName by viewModel.selectedCountryName.collectAsStateWithLifecycle() // Имя страны
-    val selectedGenreName by viewModel.selectedGenreName.collectAsStateWithLifecycle() // Имя жанра
+    val selectedCountryName by viewModel.selectedCountryName.collectAsStateWithLifecycle()
+    val selectedGenreName by viewModel.selectedGenreName.collectAsStateWithLifecycle()
 
     var selectedCategory by remember { mutableStateOf("All") }
     var selectedSorting by remember { mutableStateOf("Дата") }
     var minRating by remember { mutableFloatStateOf(1f) }
     var maxRating by remember { mutableFloatStateOf(10f) }
 
-    // Состояние для выбранного диапазона годов
     val selectedYearRange = viewModel.selectedYearRange
 
     Column(
@@ -53,7 +51,6 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Заголовок страницы с кнопкой назад и текстом
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -67,11 +64,9 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Серый текст Показывать
         Text(text = "Показывать", color = Color.Gray)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Кнопки: Все, Фильмы, Сериалы
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth()
@@ -84,7 +79,6 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalDivider(color = Color.Gray)
 
-        // Страна
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,13 +88,12 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
         ) {
             Text(text = "Страна", modifier = Modifier.weight(1f))
             Text(
-                text = selectedCountryName ?: "Выберите страну", // Отображаем имя страны или текст-заглушку
+                text = selectedCountryName ?: "Выберите страну",
                 color = Color.Gray
             )
         }
         HorizontalDivider(color = Color.Gray)
 
-        // Жанр
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,13 +103,12 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
         ) {
             Text(text = "Жанр", modifier = Modifier.weight(1f))
             Text(
-                text = selectedGenreName ?: "Выберите жанр", // Отображаем имя жанра или текст-заглушку
+                text = selectedGenreName ?: "Выберите жанр",
                 color = Color.Gray
             )
         }
         HorizontalDivider(color = Color.Gray)
 
-        // Год
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,7 +127,6 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
 
         HorizontalDivider(color = Color.Gray)
 
-        // Рейтинг (оставлено без изменений)
         Text(text = "Рейтинг", style = MaterialTheme.typography.bodyMedium)
 
         RangeSlider(
@@ -155,7 +146,6 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalDivider(color = Color.Gray)
 
-        // Сортировка (оставлено без изменений)
         Text(text = "Сортировать", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -186,7 +176,7 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
                     },
                     category = selectedCategory
                 )
-                navController.popBackStack() // Возвращаемся на SearchPage
+                navController.popBackStack()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -194,7 +184,7 @@ fun FilterPage(navController: NavController, viewModel: SearchViewModel) {
         }
     }
 }
-// Компонент для кнопки выбора категории
+
 @Composable
 fun CategoryButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     val buttonColor = if (isSelected) Color.Blue else Color.Gray
@@ -207,7 +197,6 @@ fun CategoryButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
-// Компонент для кнопки сортировки
 @Composable
 fun SortingButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     val buttonColor = if (isSelected) Color.Blue else Color.Gray
@@ -222,17 +211,17 @@ fun SortingButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
 
 @Composable
 fun RangeSlider(
-    modifier: Modifier = Modifier,  // Модификатор
-    value: ClosedFloatingPointRange<Float>,  // Пара значений для минимального и максимального ползунка
-    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,  // Обработчик изменений значений
-    valueRange: ClosedFloatingPointRange<Float>,  // Диапазон значений
-    steps: Int = 0  // Количество шагов между ползунками
+    modifier: Modifier = Modifier,
+    value: ClosedFloatingPointRange<Float>,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int = 0
 ) {
     androidx.compose.material3.RangeSlider(
-        value = value,  // Передаем диапазон значений
-        onValueChange = onValueChange,  // Обработчик изменений
-        valueRange = valueRange,  // Диапазон значений
-        steps = steps,  // Количество шагов
-        modifier = modifier  // Модификатор
+        value = value,
+        onValueChange = onValueChange,
+        valueRange = valueRange,
+        steps = steps,
+        modifier = modifier
     )
 }

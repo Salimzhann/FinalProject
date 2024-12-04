@@ -36,15 +36,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.finalproject.ui.viewmodel.SearchViewModel
 
-
 @Composable
 fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) {
     val years = (1900..2024).toList()
+    val yearsInCards = years.chunked(12)
     var startYear by remember { mutableStateOf<Int?>(null) }
     var endYear by remember { mutableStateOf<Int?>(null) }
-    var startYearCardIndex by remember { mutableIntStateOf(1000) }
-    var endYearCardIndex by remember { mutableIntStateOf(3000) }
-    val yearsInCards = years.chunked(12)
+
+    var startYearCardIndex by remember { mutableIntStateOf(0) }
+    var endYearCardIndex by remember { mutableIntStateOf(yearsInCards.size - 1) }
 
     Column(
         modifier = Modifier
@@ -67,7 +67,9 @@ fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) 
             selectedYear = startYear,
             yearsInCards = yearsInCards,
             cardIndex = startYearCardIndex,
-            onCardChange = { startYearCardIndex = it }, // Обновляем состояние индекса
+            onCardChange = { newIndex ->
+                if (newIndex in yearsInCards.indices) startYearCardIndex = newIndex
+            },
             onYearSelected = { selectedYear -> startYear = selectedYear }
         )
 
@@ -76,7 +78,9 @@ fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) 
             selectedYear = endYear,
             yearsInCards = yearsInCards,
             cardIndex = endYearCardIndex,
-            onCardChange = { endYearCardIndex = it }, // Обновляем состояние индекса
+            onCardChange = { newIndex ->
+                if (newIndex in yearsInCards.indices) endYearCardIndex = newIndex
+            },
             onYearSelected = { selectedYear -> endYear = selectedYear }
         )
 
@@ -87,13 +91,14 @@ fun YearSelectionPage(navController: NavController, viewModel: SearchViewModel) 
                 }
                 navController.popBackStack()
             },
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         ) {
             Text("Выбрать")
         }
     }
 }
-
 
 @Composable
 fun YearSelector(
@@ -110,13 +115,13 @@ fun YearSelector(
         ) {
             IconButton(
                 onClick = { if (cardIndex > 0) onCardChange(cardIndex - 1) },
-                enabled = cardIndex > 0 // Деактивируем кнопку, если это первая карточка
+                enabled = cardIndex > 0
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
             }
             IconButton(
                 onClick = { if (cardIndex < yearsInCards.size - 1) onCardChange(cardIndex + 1) },
-                enabled = cardIndex < yearsInCards.size - 1 // Деактивируем кнопку, если это последняя карточка
+                enabled = cardIndex < yearsInCards.size - 1
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Вперед")
             }
@@ -143,4 +148,3 @@ fun YearSelector(
         }
     }
 }
-

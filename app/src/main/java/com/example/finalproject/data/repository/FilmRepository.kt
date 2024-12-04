@@ -56,8 +56,8 @@ interface FilmRepository {
     suspend fun getFilters(): Response<FiltersResponse>
     @GET("/api/v2.2/films")
     suspend fun getFilteredMovies(
-        @Query("countries") countries: List<Int>?, // Исправлено на List<Int>
-        @Query("genres") genres: List<Int>?, // Исправлено на List<Int>
+        @Query("countries") countries: List<Int>?,
+        @Query("genres") genres: List<Int>?,
         @Query("yearFrom") yearFrom: Int = 1000,
         @Query("yearTo") yearTo: Int = 3000,
         @Query("ratingFrom") ratingFrom: Float = 0f,

@@ -62,17 +62,15 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Верхняя часть страницы с ограниченной высотой SearchBar
         SearchBar(
-            expanded = true, // Можно сделать раскрывающимся, если потребуется
-            onExpandedChange = { /* Handle expanded state */ },
+            expanded = true,
+            onExpandedChange = {},
             inputField = {
-                // Поисковое поле
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = {
                         searchText = it
-                        viewModel.onSearchQueryChanged(it) // Обновляем состояние текста в ViewModel
+                        viewModel.onSearchQueryChanged(it)
                     },
                     placeholder = { Text("Фильмы, актёры, режиссёры") },
                     leadingIcon = {
@@ -82,21 +80,19 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Вертикальный разделитель
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
                                     .width(1.dp)
                                     .background(Color.Gray)
                             )
-                            // Иконка фильтра
                             IconButton(onClick = { navController.navigate("filter") }) {
                                 Icon(Icons.Filled.FilterList, contentDescription = "Filter")
                             }
                         }
                     },
                     modifier = Modifier
-                        .fillMaxWidth(), // Высота для более аккуратного вида
+                        .fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium
                 )
             },
@@ -106,15 +102,14 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(58.dp), // Ограничиваем высоту самого SearchBar (включая все элементы)
-            shape = RoundedCornerShape(36.dp), // Округлые края
+                .height(58.dp),
+            shape = RoundedCornerShape(36.dp),
             content = {}
         )
 
 
-        Spacer(modifier = Modifier.height(16.dp)) // Пробел после SearchBar
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Далее идут другие элементы, такие как отображение фильмов и состояний экрана
         when (screenState) {
             is ScreenState.Initial -> {}
             is ScreenState.Loading -> {
@@ -141,7 +136,6 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
             }
         }
 
-        // Отображение фильмов после поиска
         when (filteredMoviesState) {
             is ScreenState.Initial -> {}
             is ScreenState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -169,7 +163,7 @@ fun SearchPage(navController: NavController, viewModel: SearchViewModel) {
 @Composable
 fun PreviewSearchPage() {
     val navController = rememberNavController()
-    val viewModel = SearchViewModel() // Предположим, что у вас есть соответствующий ViewModel
+    val viewModel = SearchViewModel()
 
     SearchPage(navController = navController, viewModel = viewModel)
 }
@@ -182,19 +176,16 @@ fun MovieItem(movie: Movie) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Блок для изображения с рейтингом
         Box(
             modifier = Modifier
                 .size(80.dp)
         ) {
-            // Изображение фильма
             Image(
                 painter = rememberAsyncImagePainter(movie.posterUrlPreview),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )
 
-            // Рейтинг в верхнем левом углу
             Box(
                 modifier = Modifier
                     .background(
@@ -213,7 +204,6 @@ fun MovieItem(movie: Movie) {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // Колонка с названием, годом и жанром
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.fillMaxWidth()
@@ -242,19 +232,16 @@ fun FilmItem(film: Film) {
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Блок для изображения с рейтингом
         Box(
             modifier = Modifier
                 .size(80.dp)
         ) {
-            // Изображение фильма
             Image(
                 painter = rememberAsyncImagePainter(film.posterUrlPreview),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize()
             )
 
-            // Рейтинг в верхнем левом углу
             Box(
                 modifier = Modifier
                     .background(
@@ -273,7 +260,6 @@ fun FilmItem(film: Film) {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // Колонка с названием, годом и жанром
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.fillMaxWidth()

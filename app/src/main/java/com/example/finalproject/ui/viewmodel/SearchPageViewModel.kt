@@ -48,8 +48,8 @@ class SearchViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = api.getFilteredMovies(
-                    countries = countryId?.let { listOf(it) }, // Передаем список с одним значением
-                    genres = genreId?.let { listOf(it) }, // Передаем список с одним значением
+                    countries = countryId?.let { listOf(it) },
+                    genres = genreId?.let { listOf(it) },
                     yearFrom = yearRange?.first ?: 1000,
                     yearTo = yearRange?.second ?: 3000,
                     ratingFrom = ratingRange.first,
@@ -76,7 +76,6 @@ class SearchViewModel : ViewModel() {
         }
     }
 
-    // Метод для обновления диапазона годов
     fun updateYearRange(startYear: Int, endYear: Int) {
         selectedYearRange = startYear to endYear
     }
@@ -91,10 +90,9 @@ class SearchViewModel : ViewModel() {
     }
 
     init {
-        // Запускаем наблюдение за изменениями текста
         viewModelScope.launch {
             searchQuery
-                .debounce(500) // Ожидание 500 мс после последнего изменения текста
+                .debounce(500)
                 .collect { query ->
                     if (query.isNotBlank()) {
                         performSearch(query)
@@ -105,12 +103,10 @@ class SearchViewModel : ViewModel() {
         }
     }
 
-    // Обновляем текст поиска
     fun onSearchQueryChanged(query: String) {
         searchQuery.value = query
     }
 
-    // Выполняем запрос
     private suspend fun performSearch(query: String) {
         screenStateSearch.value = ScreenState.Loading
         try {
@@ -132,29 +128,27 @@ class SearchViewModel : ViewModel() {
     }
 
     fun loadFilters() {
-        filtersLoadingState.value = ScreenState.Loading // Устанавливаем состояние загрузки
+        filtersLoadingState.value = ScreenState.Loading
         viewModelScope.launch {
             try {
                 val response = api.getFilters()
                 if (response.isSuccessful) {
                     val filters = response.body()
                     if (filters != null) {
-                        genres.postValue(filters.genres) // Обновляем список жанров
-                        countries.postValue(filters.countries) // Обновляем список стран
+                        genres.postValue(filters.genres)
+                        countries.postValue(filters.countries)
                         filtersLoadingState.value =
-                            ScreenState.Success(Unit) as Nothing // Устанавливаем успешное состояние
+                            ScreenState.Success(Unit) as Nothing
                     } else {
-                        filtersLoadingState.value = ScreenState.Error("Ответ сервера пустой") // Обрабатываем пустой ответ
+                        filtersLoadingState.value = ScreenState.Error("Ответ сервера пустой")
                     }
                 } else {
                     filtersLoadingState.value =
                         ScreenState.Error("Ошибка сервера: ${response.errorBody()?.string() ?: response.message()}")
                 }
             } catch (e: Exception) {
-                filtersLoadingState.value = ScreenState.Error("Ошибка сети: ${e.localizedMessage}") // Обрабатываем ошибки сети
+                filtersLoadingState.value = ScreenState.Error("Ошибка сети: ${e.localizedMessage}")
             }
         }
     }
-
-
 }

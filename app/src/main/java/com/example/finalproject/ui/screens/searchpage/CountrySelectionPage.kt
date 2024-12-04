@@ -43,15 +43,14 @@ import kotlinx.coroutines.flow.debounce
 @OptIn(FlowPreview::class)
 @Composable
 fun CountrySelectionPage(navController: NavController, viewModel: SearchViewModel) {
-    val countries by viewModel.countries.observeAsState(emptyList()) // Список стран
-    val selectedCountryId = viewModel.selectedCountryId.collectAsStateWithLifecycle() // ID выбранной страны
+    val countries by viewModel.countries.observeAsState(emptyList())
+    val selectedCountryId = viewModel.selectedCountryId.collectAsStateWithLifecycle()
     var searchQuery by remember { mutableStateOf("") }
     var filteredCountries by remember { mutableStateOf(countries) }
 
-    // Реализация дебаунса
     LaunchedEffect(searchQuery, countries) {
         snapshotFlow { searchQuery }
-            .debounce(300) // Задержка в миллисекундах
+            .debounce(300)
             .collect { query ->
                 filteredCountries = countries.filter {
                     it.country.contains(query, ignoreCase = true)
@@ -61,7 +60,7 @@ fun CountrySelectionPage(navController: NavController, viewModel: SearchViewMode
 
     LaunchedEffect(Unit) {
         if (countries.isEmpty()) {
-            viewModel.loadFilters() // Загружаем фильтры при первой загрузке
+            viewModel.loadFilters()
         }
     }
 
@@ -70,7 +69,6 @@ fun CountrySelectionPage(navController: NavController, viewModel: SearchViewMode
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Верхняя панель с кнопкой "Назад"
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -84,7 +82,6 @@ fun CountrySelectionPage(navController: NavController, viewModel: SearchViewMode
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле для поиска
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -103,7 +100,7 @@ fun CountrySelectionPage(navController: NavController, viewModel: SearchViewMode
         ) {
             items(filteredCountries) { country ->
                 CountryListItem(country, selectedCountryId.value) {
-                    viewModel.updateSelectedCountry(country.id, country.country) // Сохраняем ID и имя страны
+                    viewModel.updateSelectedCountry(country.id, country.country)
                     navController.popBackStack()
                 }
             }
@@ -111,7 +108,6 @@ fun CountrySelectionPage(navController: NavController, viewModel: SearchViewMode
     }
 }
 
-// Элемент списка стран
 @Composable
 fun CountryListItem(country: Country, selectedCountryId: Int?, onClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {

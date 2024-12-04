@@ -43,14 +43,13 @@ import kotlinx.coroutines.flow.debounce
 @Composable
 fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel) {
     val genres by viewModel.genres.observeAsState(emptyList())
-    val selectedGenreId = viewModel.selectedGenreId.collectAsStateWithLifecycle() // ID выбранного жанра
+    val selectedGenreId = viewModel.selectedGenreId.collectAsStateWithLifecycle()
     var searchQuery by remember { mutableStateOf("") }
     var filteredGenres by remember { mutableStateOf(genres) }
 
-    // Реализация дебаунса
     LaunchedEffect(searchQuery, genres) {
         snapshotFlow { searchQuery }
-            .debounce(300) // Задержка в миллисекундах
+            .debounce(300)
             .collect { query ->
                 filteredGenres = genres.filter {
                     it.genre.contains(query, ignoreCase = true)
@@ -60,7 +59,7 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
 
     LaunchedEffect(Unit) {
         if (genres.isEmpty()) {
-            viewModel.loadFilters() // Загружаем фильтры при первой загрузке
+            viewModel.loadFilters()
         }
     }
 
@@ -69,7 +68,6 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Верхняя панель с кнопкой "Назад"
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -83,7 +81,6 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Поле для поиска
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -96,7 +93,6 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Список жанров
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -110,7 +106,6 @@ fun GenreSelectionPage(navController: NavController, viewModel: SearchViewModel)
     }
 }
 
-// Элемент списка жанров
 @Composable
 fun GenreListItem(genre: Genre, selectedGenreId: Int?, onClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
