@@ -138,8 +138,11 @@ fun MyBottomNavigation(navController: NavController) {
             val isHomeRelated = currentRoute == "home" || currentRoute?.startsWith("movieDetail/") == true ||
                     currentRoute?.startsWith("allMovies/") == true || currentRoute?.startsWith("actorDetail/") == true ||
                     currentRoute?.startsWith("galleryScreen/") == true || currentRoute?.startsWith("filmography/") == true
+            val isSearchRelated = currentRoute == "search" || currentRoute == "filter" ||
+                    currentRoute == "country" || currentRoute == "genre" || currentRoute == "year"
             val isSelected = when (screen.route) {
                 Icons.Home.route -> isHomeRelated
+                Icons.Search.route -> isSearchRelated
                 else -> currentRoute == screen.route
             }
             BottomNavigationItem(
@@ -154,6 +157,15 @@ fun MyBottomNavigation(navController: NavController) {
                 selected = isSelected,
                 onClick = {
                     if (screen.route == Icons.Home.route) {
+                        navController.popBackStack(navController.graph.startDestinationId, inclusive = false)
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    } else if (screen.route == Icons.Search.route) {
                         navController.popBackStack(navController.graph.startDestinationId, inclusive = false)
                         navController.navigate(screen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
